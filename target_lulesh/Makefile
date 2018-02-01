@@ -8,9 +8,10 @@ LULESH_EXEC = lulesh2.0
 
 MPI_INC = /opt/local/include/openmpi
 MPI_LIB = /opt/local/lib
+CUDA = /sw/summitdev/cuda/9.0.69
 
 # Point your mpicc to Clang
-CXX = mpicc
+CXX = clang
 
 SOURCES2.0 = \
 	lulesh.cc \
@@ -30,6 +31,7 @@ ifdef THREADS
 threads = -DTHREADS=$(THREADS)
 endif
 
+USE_GPU = 1
 gpu =
 ifdef USE_GPU
 gpu = -DUSE_GPU=$(USE_GPU)
@@ -40,10 +42,12 @@ ifdef USE_MPI
 mpi = -DUSE_MPI=$(USE_MPI)
 endif
 
-# Tuning flags for Power 8
-CXXFLAGS = -mcpu=pwr8 -mtune=pwr8 -fopenmp=libomp -O3 -omptargets=nvptx64sm_35-nvidia-linux $(shared) $(mpi) $(teams) $(threads) $(gpu)  
+showflag =
 
-LDFLAGS = -L/usr/local/cuda/nvvm/libdevice
+# Tuning flags for Power 8
+CXXFLAGS = -mcpu=pwr8 -mtune=pwr8 -fopenmp=libomp -O3 -fopenmp-targets=nvptx64-nvidia-cuda $(shared) $(mpi) $(teams) $(threads) $(gpu) $(showflag)
+
+LDFLAGS = -L$(CUDA)/nvvm/libdevice
 
 .cc.o: lulesh.h
 	@echo "Building $<"
@@ -53,7 +57,7 @@ all: $(LULESH_EXEC)
 
 lulesh2.0: $(OBJECTS2.0)
 	@echo "Linking"
-	$(CXX) -fopenmp=libomp -omptargets=nvptx64sm_35-nvidia-linux $(OBJECTS2.0) $(LDFLAGS) -lomp -lomptarget -lstdc++ -lm -o $@
+	$(CXX) -fopenmp=libomp -fopenmp-targets=nvptx64-nvidia-cuda $(OBJECTS2.0) $(LDFLAGS) -lomp -lomptarget -lstdc++ -lm -o $@ $(showflag)
 
 clean:
 	/bin/rm -f *.o *~ *.tgt* $(OBJECTS) $(LULESH_EXEC)
