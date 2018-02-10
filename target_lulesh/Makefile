@@ -8,7 +8,7 @@ LULESH_EXEC = lulesh2.0
 
 MPI_INC = /opt/local/include/openmpi
 MPI_LIB = /opt/local/lib
-CUDA = /sw/summitdev/cuda/9.0.69
+CUDA ?= /sw/summitdev/cuda/9.0.69
 
 # Point your mpicc to Clang
 CXX = clang
@@ -43,11 +43,13 @@ mpi = -DUSE_MPI=$(USE_MPI)
 endif
 
 showflag =
+oflag = -g
+archflag =
 
 # Tuning flags for Power 8
-CXXFLAGS = -mcpu=pwr8 -mtune=pwr8 -fopenmp=libomp -O3 -fopenmp-targets=nvptx64-nvidia-cuda $(shared) $(mpi) $(teams) $(threads) $(gpu) $(showflag)
+CXXFLAGS = $(archflag) -fopenmp=libomp $(oflag) -fopenmp-targets=nvptx64-nvidia-cuda $(shared) $(mpi) $(teams) $(threads) $(gpu) $(showflag)
 
-LDFLAGS = -L$(CUDA)/nvvm/libdevice
+LDFLAGS = -L $(CUDA)/nvvm/libdevice
 
 .cc.o: lulesh.h
 	@echo "Building $<"
