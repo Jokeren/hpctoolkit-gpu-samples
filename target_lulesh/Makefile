@@ -11,7 +11,7 @@ MPI_LIB = /opt/local/lib
 CUDA ?= /sw/summitdev/cuda/9.0.69
 
 # Point your mpicc to Clang
-CXX = clang
+CXX = mpicc
 
 SOURCES2.0 = \
 	lulesh.cc \
@@ -37,7 +37,8 @@ ifdef USE_GPU
 gpu = -DUSE_GPU=$(USE_GPU)
 endif
 
-mpi = -DUSE_MPI=0
+USE_MPI = 1
+mpi = 
 ifdef USE_MPI
 mpi = -DUSE_MPI=$(USE_MPI)
 endif
