@@ -17,7 +17,7 @@ int setenv(const char *name, const char *value, int overwrite) {
     old_setenv = (SETENV)dlsym(handle, "setenv");
   }
   int ret = old_setenv(name, value, overwrite);
-  pthread_mutex_lock(&mutex);
+  pthread_mutex_unlock(&mutex);
   return ret;
 }
 
@@ -31,6 +31,6 @@ char *getenv(const char *name) {
     old_getenv = (GETENV)dlsym(handle, "getenv");
   }
   char *ret = old_getenv(name);
-  pthread_mutex_lock(&mutex);
+  pthread_mutex_unlock(&mutex);
   return ret;
 }
