@@ -11,7 +11,7 @@ MPI_LIB = /opt/local/lib
 CUDA ?= /sw/summitdev/cuda/9.0.69
 
 # Point your mpicc to Clang
-CXX = mpicc
+CXX = clang
 
 SOURCES2.0 = \
 	lulesh.cc \
@@ -37,18 +37,19 @@ ifdef USE_GPU
 gpu = -DUSE_GPU=$(USE_GPU)
 endif
 
-USE_MPI = 1
+USE_MPI = 0
 mpi = 
 ifdef USE_MPI
 mpi = -DUSE_MPI=$(USE_MPI)
 endif
 
 showflag =
-oflag = -g
+oflag = -g -O3
 archflag =
+PTX = -Xcuda-ptxas "-maxrregcount=64"
 
 # Tuning flags for Power 8
-CXXFLAGS = $(archflag) -fopenmp=libomp $(oflag) -fopenmp-targets=nvptx64-nvidia-cuda $(shared) $(mpi) $(teams) $(threads) $(gpu) $(showflag)
+CXXFLAGS = $(archflag) -fopenmp=libomp $(oflag) -fopenmp-targets=nvptx64-nvidia-cuda $(shared) $(mpi) $(teams) $(threads) $(gpu) $(showflag) $(PTX)
 
 LDFLAGS = -L $(CUDA)/nvvm/libdevice
 
