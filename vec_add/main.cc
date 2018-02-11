@@ -1,6 +1,7 @@
 #include <cstdio>
 
 #include <omp.h>
+#include <mpi.h>
 
 static const size_t N = 1000;
 
@@ -16,7 +17,7 @@ void output(int *p, size_t size) {
   }
 }
 
-int main() {
+int main(int argc, char *argv[]) {
   int l1[N], l2[N];
   int r1[N], r2[N];
   int p1[N], p2[N];
@@ -24,6 +25,15 @@ int main() {
   init(r1, N);
   init(l2, N);
   init(r2, N);
+
+#ifdef USE_MPI
+  int numtasks, rank;
+  MPI_Init(&argc, &argv);
+  MPI_Comm_size(MPI_COMM_WORLD, &numtasks);
+  MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+  printf("MPI task %d/%d\n", rank, numtasks);
+#endif
+
   #pragma omp parallel
   {
     if (omp_get_thread_num() == 0) {
@@ -45,5 +55,9 @@ int main() {
   }
   output(p1, N);
   output(p2, N);
+
+#ifdef USE_MPI
+  MPI_Finalize();
+#endif
   return 0;
 }
