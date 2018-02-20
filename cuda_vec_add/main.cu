@@ -61,14 +61,8 @@ int main(int argc, char *argv[]) {
   printf("MPI task %d/%d\n", rank, numtasks);
 #endif
 
-  //CUdevice device;
-  //cuDeviceGet(&device, 0);
-  //CUcontext deviceContext;
-  //cuCtxCreate(&deviceContext, 0, device);
-
   #pragma omp parallel
   {
-    //cuCtxSetCurrent(deviceContext);
     size_t threads = 256;
     size_t blocks = (N - 1) / threads + 1;
     if (omp_get_thread_num() == 0) {
