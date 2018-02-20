@@ -44,7 +44,7 @@ mpi = -DUSE_MPI=$(USE_MPI)
 endif
 
 showflag =
-oflag = -g -O3
+oflag = -g
 archflag =
 PTX = -Xcuda-ptxas "-maxrregcount=64"
 
