@@ -24,18 +24,14 @@ oflag = -g
 archflag ?= -mcpu=pwr8 -mtune=pwr8 
 
 # Tuning flags for Power 8
-CXXFLAGS = $(archflag) $(oflag) $(shared) $(mpi) $(showflag) -fopenmp
-
-.cc.o:
-	@echo "Building $<"
-	$(CXX) -c $(CXXFLAGS) -o $@  $<
+CXXFLAGS = -Xcompiler "$(oflag) $(shared) $(mpi) $(showflag) -fopenmp" -lcudart -lcuda
 
 all: $(EXEC)
 
 main: $(OBJECTS)
 	@echo "Linking"
-	$(CXX) $(OBJECTS) $(LDFLAGS) -lomp -lstdc++ -lm -o $@ $(showflag)
+	$(CXX) $(OBJECTS) $(LDFLAGS) -lstdc++ -lm -o $@ $(showflag) $(CXXFLAGS)
 
 clean:
-	/bin/rm -f *.o *~ *.tgt* $(OBJECTS) $(EXEC)
+	/bin/rm -f *.o *~ *.tgt* $(EXEC)
 	/bin/rm -rf *.dSYM
