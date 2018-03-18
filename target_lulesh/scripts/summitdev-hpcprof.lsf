@@ -1,0 +1,11 @@
+#!/bin/bash
+# Begin LSF directives
+#BSUB -P CSC250STTO11
+#BSUB -J lulesh
+#BSUB -o lulesh.log%J
+#BSUB -W 1:00
+#BSUB -nnodes 2
+# End LSF directives and begin shell commands
+
+date
+jsrun -n 40 hpcprof-mpi -S lulesh2.0.hpcstruct hpctoolkit-lulesh2.0-measurements
