@@ -24,7 +24,7 @@ oflag = -g
 archflag ?= -mcpu=pwr8 -mtune=pwr8 
 
 # Tuning flags for Power 8
-CXXFLAGS = -Xcompiler "$(oflag) $(shared) $(mpi) $(showflag) -fopenmp" -lcudart -lcuda -G
+CXXFLAGS = -Xcompiler "$(oflag) $(shared) $(mpi) $(showflag) -fopenmp" -lcudart -lcuda -G -O3
 
 all: $(EXEC)
 
