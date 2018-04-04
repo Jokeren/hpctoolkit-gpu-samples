@@ -32,6 +32,8 @@ int main() {
           }
         }
       }
+    } else {
+      printf("Please use OMP_NUM_THREADS=2\n");
     }
   }
 }
