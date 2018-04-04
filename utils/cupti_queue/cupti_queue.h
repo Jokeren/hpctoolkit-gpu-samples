@@ -10,14 +10,14 @@ private:
   typedef CuptiQueueItem<T> item_type;
 
 public:
-  CuptiQueueItem(T __value) : _next(NULL), _value(__value) {
+  CuptiQueueItem(T value) : _next(NULL), _value(value) {
   };
 
   ~CuptiQueueItem() { 
   };
 
-  void setNext(item_type *__next) { 
-    _next.store(__next); 
+  void setNext(item_type *next) { 
+    _next.store(next); 
   };
 
   item_type *next() { 
@@ -117,13 +117,13 @@ public:
   // inspect the head of the queue
   item_type *peek() { return _head.load(); };
 
-  // inspect the head of the queue
+  // inspect the tail of the queue
   item_type *rear() { return _tail.load(); };
 
   // grab the contents of the queue for your own private use
   item_type *steal() { return _tail.exchange(NULL); };
 
-  // inspect the head of the queue
+  // change the head of the queue
   void setPeek(item_type *node) { return _head.store(node); };
 
   iterator begin() { return iterator(_head.load()); };
