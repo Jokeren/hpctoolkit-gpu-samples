@@ -88,7 +88,7 @@ class CuptiStack {
     item_type *first = top();
     if (first) {
       item_type *succ = first->_next;
-      while (first && !_head.compare_exchange_strong(first, succ)) {
+      while (!_head.compare_exchange_strong(first, succ) && first) {
         succ = first->_next;
       }
       return first;
