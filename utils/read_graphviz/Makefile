@@ -22,7 +22,7 @@ oflag = -g
 archflag ?= -mcpu=pwr8 -mtune=pwr8 
 
 # Tuning flags for Power 8
-CXXFLAGS = -lboost_graph
+CXXFLAGS = -lboost_graph $(oflag)
 
 all: $(EXEC)
 
