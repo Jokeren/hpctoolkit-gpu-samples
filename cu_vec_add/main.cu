@@ -53,18 +53,19 @@ int main(int argc, char *argv[]) {
 #endif
 
   cuInit(0);
+  CUdevice device;
+  DRIVER_API_CALL(cuDeviceGet(&device, 0));
+  CUcontext context;
+  DRIVER_API_CALL(cuCtxCreate(&context, 0, device));
 
   #pragma omp parallel
   {
     size_t threads = 256;
     size_t blocks = (N - 1) / threads + 1;
-    CUcontext context;
+    DRIVER_API_CALL(cuCtxSetCurrent(context));
     CUmodule moduleAdd;
     CUfunction vecAdd;
-    CUdevice device;
 
-    DRIVER_API_CALL(cuDeviceGet(&device, 0));
-    DRIVER_API_CALL(cuCtxCreate(&context, 0, device));
     DRIVER_API_CALL(cuModuleLoad(&moduleAdd, "vecAdd.cubin"));
     DRIVER_API_CALL(cuModuleGetFunction(&vecAdd, moduleAdd, "vecAdd"));
 
@@ -107,13 +108,12 @@ int main(int argc, char *argv[]) {
       DRIVER_API_CALL(cuMemFree(dr2));
       DRIVER_API_CALL(cuMemFree(dp2));
     }
-
-    DRIVER_API_CALL(cuCtxSynchronize());
     DRIVER_API_CALL(cuModuleUnload(moduleAdd));
-    DRIVER_API_CALL(cuCtxDestroy(context));
   }
 
   cudaDeviceSynchronize();
+  DRIVER_API_CALL(cuCtxSynchronize());
+  DRIVER_API_CALL(cuCtxDestroy(context));
 
   output(p1, N);
   output(p2, N);
