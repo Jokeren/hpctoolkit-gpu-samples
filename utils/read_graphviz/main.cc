@@ -31,11 +31,13 @@ struct Edge {
 
 
 struct Inst {
+  size_t vertex;
   std::string offset;
   std::string operate;
   std::vector<std::string> operands;
 
-  Inst(const std::string &inst_str) {
+  Inst(size_t vertex, const std::string &inst_str) {
+    this->vertex = vertex;
     std::istringstream ss(inst_str);
     std::string s;
     if (std::getline(ss, s, ':')) {
@@ -62,6 +64,7 @@ struct Inst {
 
 
 std::map<size_t, std::vector<Inst> > insts;
+std::map<size_t, size_t> sections;
 
 int main() {
   // Create a typedef for the Graph type
@@ -105,7 +108,7 @@ int main() {
     inst_strings.pop_back();
 
     for (auto inst_string : inst_strings) {
-      insts[v].push_back(Inst(inst_string));
+      insts[v].push_back(Inst(v, inst_string));
     }
   }
 
@@ -113,15 +116,20 @@ int main() {
   BGL_FORALL_EDGES(e, g, Graph)
   {
     std::cout << g[source(e,g)].name << " -> " << g[target(e,g)].name << ": " << g[e].style << std::endl;
+    sections[target(e,g)] = source(e,g);
   }
 
   std::cout << std::endl << "Every call:" << std::endl;
   for (auto entry : insts) {
     for (auto inst : entry.second) {
       if (inst.operate.find("CALL") != std::string::npos) {
+        size_t v = inst.vertex;
+        while (sections.find(v) != sections.end()) {
+          v = sections[v];
+        }
         std::string &operand = inst.operands[0];
         std::string callee = operand.substr(2, operand.size() - 4);
-        std::cout << "From 0x" << inst.offset << " to " << callee << std::endl;
+        std::cout << "From " << g[v].name << ": 0x" << inst.offset << " to " << callee << std::endl;
       }
     }
   }
