@@ -7,7 +7,8 @@ EXEC = main
 CXX = g++
 
 SOURCES = \
-	main.cc
+	main.cc \
+	graph_reader.cc
 
 OBJECTS = $(SOURCES:.cc=.o)
 
@@ -18,7 +19,7 @@ mpi = -DUSE_MPI=$(USE_MPI)
 endif
 
 showflag =
-oflag = -g
+oflag = -g -std=c++11
 archflag ?= -mcpu=pwr8 -mtune=pwr8 
 
 # Tuning flags for Power 8
