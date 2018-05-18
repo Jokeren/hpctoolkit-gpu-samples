@@ -15,11 +15,7 @@ class GraphReader {
  public:
   GraphReader(const std::string &file_name) : _file_name(file_name) {}
 
-  void construct_cfg();
-
-  std::vector<Call *> analyze_calls();
-
-  std::vector<Loop *> analyze_loops();
+  std::vector<Function *> construct_cfg();
 
  private:
   struct Vertex {
@@ -39,17 +35,15 @@ class GraphReader {
           Vertex, Edge, boost::property<boost::graph_name_t, std::string> > Graph;
 
  private:
-  void construct_blocks();
-  void construct_functions();
-  size_t find_block_parents(size_t node);
+  std::vector<Block *> construct_blocks();
+  std::vector<Function *> construct_functions(const std::vector<Block *> &blocks);
+  size_t find_block_parent(size_t node);
   void unite_blocks(size_t l, size_t r);
 
  private:
   Graph _g;
   std::string _file_name;
-  std::vector<Block *> _blocks;
-  std::vector<Function *> _functions;
-  std::unordered_map<size_t, size_t> _block_parents;
+  std::unordered_map<size_t, size_t> _block_parent;
 };
 
 #endif

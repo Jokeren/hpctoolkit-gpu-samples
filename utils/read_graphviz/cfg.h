@@ -9,6 +9,7 @@
 
 struct Block {
   std::vector<Inst *> insts;
+  std::vector<Block *> targets;
   size_t id;
   std::string name;
 
@@ -35,13 +36,22 @@ struct Function {
 };
 
 
-struct Loop {
+struct LoopEntry {
   Block *entry_block; 
   Block *back_edge_block;
+
+  LoopEntry(Block *entry_block, Block *back_edge_block) :
+    entry_block(entry_block), back_edge_block(back_edge_block) {}
+};
+
+
+struct Loop {
+  std::vector<LoopEntry *> entries;
+  std::vector<Loop *> child_loops;
+  std::vector<Block *> blocks;
   Function *function;
 
-  Loop(Block *entry_block, Block *back_edge_block, Function *function) :
-    entry_block(entry_block), back_edge_block(back_edge_block), function(function) {}
+  Loop(Function *function) : function(function) {}
 };
 
 
