@@ -12,7 +12,7 @@ int main() {
   for (auto call : calls) {
     std::stringstream stream;
     stream << std::hex << call->caller_block->insts[0]->offset;
-    std::cout << "From func< " << call->caller_function->name << "> 0x" << stream.str() <<
+    std::cout << "From func<" << call->caller_function->name << "> 0x" << stream.str() <<
       " to " << call->callee_function->name << std::endl;
   }
 

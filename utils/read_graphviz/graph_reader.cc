@@ -65,13 +65,7 @@ size_t GraphReader::find_block_parents(size_t node) {
 
 
 void GraphReader::unite_blocks(size_t l, size_t r) {
-  if (_block_parents.find(l) == _block_parents.end()) {
-    _block_parents[l] = find_block_parents(r);
-  } else if (_block_parents.find(r) == _block_parents.end()) {
-    _block_parents[r] = find_block_parents(l);
-  } else {
-    _block_parents[l] = find_block_parents(r);
-  }
+  _block_parents[l] = find_block_parents(r);
 }
 
 
@@ -79,7 +73,7 @@ void GraphReader::construct_functions() {
   //std::cout << std::endl << "Every edge pos:" << std::endl;
   BGL_FORALL_EDGES(e, _g, Graph) {
     //std::cout << _g[source(e,_g)].name << " -> " << _g[target(e,_g)].name << ": " << _g[e].style << std::endl;
-    // Union find operation
+    // Adjusted union find operation
     unite_blocks(boost::target(e, _g), boost::source(e, _g));
   }
 
@@ -89,6 +83,7 @@ void GraphReader::construct_functions() {
   for (auto block : _blocks) {
     if (find_block_parents(block->id) == block->id) {
       Function *function = new Function(function_id, _g[block->id].name);
+      //std::cout << function->name << std::endl;
       ++function_id;
       for (auto bb : _blocks) {
         if (find_block_parents(bb->id) == block->id) {
