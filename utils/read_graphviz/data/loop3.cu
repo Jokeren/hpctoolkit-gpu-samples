@@ -7,8 +7,11 @@ void vecAdd(float *l, float *r, float *result, size_t N) {
     goto LABEL2;
   }
 LABEL1:
-  result[i] = l[i] - r[i];
-LABEL2:
+  result[i] = exp(l[i]);
+  goto END;
+LABEL2: 
   result[i] = l[i] + r[i];
+  goto END;
+END:
+  return;
 }
-

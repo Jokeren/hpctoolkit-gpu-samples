@@ -2,20 +2,19 @@ digraph f {
 subgraph "cluster__Z6vecAddPfS_S_m" {
 node [fontname="Courier",fontsize=10,shape=Mrecord];
 "_Z6vecAddPfS_S_m"
-[label="{<entry>	.global		_Z6vecAddPfS_S_m\l	.type		_Z6vecAddPfS_S_m,@function\l	.size		_Z6vecAddPfS_S_m,(.L_22\ -\ _Z6vecAddPfS_S_m)\l	.other		_Z6vecAddPfS_S_m,\<no\ object\>\l_Z6vecAddPfS_S_m:\l.text._Z6vecAddPfS_S_m:\l0008:\ \ \ MOV\ R1,\ c\[0x0\]\[0x20\];\l0010:\ \ \ S2R\ R8,\ SR_TID.X;\l0018:\ \{\ SHL\ R7,\ R8.reuse,\ 0x2;\l/*0028*/\ \ \ I2F.F32.U32\ R0,\ R8;\}\l0030:\ \ \ SHR.U32\ R10,\ R8,\ 0x1e;\l0038:\ \ \ IADD\ R2.CC,\ R7,\ c\[0x0\]\[0x140\];\l0048:\ \ \ IADD.X\ R3,\ R10,\ c\[0x0\]\[0x144\];\l0050:\ \ \ LDG.E\ R6,\ \[R2\];\l0058:\ \ \ IADD\ R4.CC,\ R7,\ c\[0x0\]\[0x148\];\l0068:\ \ \ IADD.X\ R5,\ R10,\ c\[0x0\]\[0x14c\];\l0070:\ \ \ FSETP.LEU.AND\ P0,\ PT,\ R6,\ R0,\ PT;\l|<exit0>0078:\ \ \ @P0\ BRA.U\ `(.L_1);\l|<exitpost0>0088:\ \ \ @!P0\ LDG.E\ R9,\ \[R4\];\l}"]
-"_Z6vecAddPfS_S_m":exit0:e -> ".L_1":entry:n [style=solid];
-"_Z6vecAddPfS_S_m":exitpost0:s -> ".L_1":entry:n [style=solid];
-node [fontname="Courier",fontsize=10,shape=Mrecord];
-".L_1"
-[label="{<entry>.L_1:\l0090:\ \ \ IADD\ R11.CC,\ R7,\ c\[0x0\]\[0x150\];\l0098:\ \ \ MOV\ R0,\ R6;\l00a8:\ \ \ IADD.X\ R7,\ R10,\ c\[0x0\]\[0x154\];\l|<exit0>00b0:\ \{\ MOV\ R6,\ R11;\l/*00b8*/\ \ \ @P0\ BRA.U\ `(.L_2);\}\l|<exitpost0>00c8:\ \ \ @!P0\ FADD\ R9,\ R0,\ -R9;\l00d0:\ \ \ @!P0\ STG.E\ \[R6\],\ R9;\l00d8:\ \ \ @!P0\ LDG.E\ R0,\ \[R2\];\l}"]
-".L_1":exit0:e -> ".L_2":entry:n [style=solid];
-".L_1":exitpost0:s -> ".L_2":entry:n [style=solid];
+[label="{<entry>	.global		_Z6vecAddPfS_S_m\l	.type		_Z6vecAddPfS_S_m,@function\l	.size		_Z6vecAddPfS_S_m,(.L_24\ -\ _Z6vecAddPfS_S_m)\l	.other		_Z6vecAddPfS_S_m,\<no\ object\>\l_Z6vecAddPfS_S_m:\l.text._Z6vecAddPfS_S_m:\l0008:\ \ \ MOV\ R1,\ c\[0x0\]\[0x20\];\l0010:\ \ \ S2R\ R4,\ SR_TID.X;\l0018:\ \{\ SHL\ R7,\ R4.reuse,\ 0x2;\l/*0028*/\ \ \ I2F.F32.U32\ R0,\ R4;\}\l0030:\ \{\ SHR.U32\ R8,\ R4,\ 0x1e;\l/*0038*/\ \ \ SSY\ `(.L_1);\}\l0048:\ \ \ IADD\ R2.CC,\ R7,\ c\[0x0\]\[0x140\];\l0050:\ \ \ IADD.X\ R3,\ R8,\ c\[0x0\]\[0x144\];\l0058:\ \ \ LDG.E\ R5,\ \[R2\];\l0068:\ \ \ IADD\ R7.CC,\ R7,\ c\[0x0\]\[0x150\];\l0070:\ \ \ IADD.X\ R8,\ R8,\ c\[0x0\]\[0x154\];\l0078:\ \ \ FSETP.GT.AND\ P0,\ PT,\ R5,\ R0,\ PT;\l|<exit0>0088:\ \ \ @P0\ BRA\ `(.L_2);\l|<exitpost0>0090:\ \ \ LEA\ R2.CC,\ R4.reuse,\ c\[0x0\]\[0x148\],\ 0x2;\l0098:\ \ \ LEA.HI.X\ R3,\ R4,\ c\[0x0\]\[0x14c\],\ RZ,\ 0x2;\l00a8:\ \ \ LDG.E\ R2,\ \[R2\];\l|<exit1>00b0:\ \{\ FADD\ R5,\ R5,\ R2;\l/*00b8*/\ \ \ SYNC\ (*\"TARGET=\ .L_1\ \"*);\}\l}"]
+"_Z6vecAddPfS_S_m":exit0:e -> ".L_2":entry:n [style=solid];
+"_Z6vecAddPfS_S_m":exit1:e -> ".L_1":entry:n [style=solid];
 node [fontname="Courier",fontsize=10,shape=Mrecord];
 ".L_2"
-[label="{<entry>.L_2:\l00e8:\ \ \ LDG.E\ R10,\ \[R4\];\l00f0:\ \ \ FADD\ R0,\ R0,\ R10;\l00f8:\ \ \ STG.E\ \[R6\],\ R0;\l|<exit0>0108:\ \ \ EXIT;\l}"]
+[label="{<entry>.L_2:\l00c8:\ \ \ FMUL32I\ R0,\ R5,\ 1.4426950216293334961;\l00d0:\ \ \ F2F.F32.F32.TRUNC\ R0,\ R0;\l00d8:\ \ \ FADD\ R3,\ RZ,\ R0;\l00e8:\ \ \ FSETP.LT.AND\ P1,\ PT,\ R3,\ -126,\ PT;\l00f0:\ \ \ FFMA\ R2,\ R0,\ c\[0x2\]\[0x0\],\ R5;\l00f8:\ \ \ FFMA\ R2,\ R0,\ c\[0x2\]\[0x4\],\ R2;\l0108:\ \ \ @P1\ FMUL\ R3,\ R3,\ 0.5;\l0110:\ \ \ FMUL32I\ R2,\ R2,\ 1.4426950216293334961;\l0118:\ \ \ RRO.EX2\ R6,\ R3;\l0128:\ \ \ MUFU.EX2\ R3,\ R6;\l0130:\ \ \ RRO.EX2\ R4,\ R2;\l0138:\ \ \ MUFU.EX2\ R2,\ R4;\l0148:\ \ \ FSETP.LT.AND\ P0,\ PT,\ R5,\ -105,\ PT;\l0150:\ \ \ @P1\ FMUL\ R3,\ R3,\ R3;\l0158:\ \ \ FSETP.GT.AND\ P1,\ PT,\ R5,\ 105,\ PT;\l0168:\ \ \ FMUL\ R2,\ R2,\ R3;\l0170:\ \ \ SEL\ R2,\ R2,\ RZ,\ !P0;\l|<exit0>0178:\ \{\ SEL\ R5,\ R2,\ c\[0x2\]\[0x8\],\ !P1;\l/*0188*/\ \ \ SYNC\ (*\"TARGET=\ .L_1\ \"*);\}\l}"]
+".L_2":exit0:e -> ".L_1":entry:n [style=solid];
+node [fontname="Courier",fontsize=10,shape=Mrecord];
+".L_1"
+[label="{<entry>.L_1:\l0190:\ \ \ MOV\ R2,\ R7;\l0198:\ \ \ MOV\ R3,\ R8;\l01a8:\ \ \ STG.E\ \[R2\],\ R5;\l|<exit0>01b0:\ \ \ EXIT;\l}"]
 node [fontname="Courier",fontsize=10,shape=Mrecord];
 ".L_3"
-[label="{<entry>.L_3:\l|<exit0>0110:\ \ \ BRA\ `(.L_3);\l}"]
+[label="{<entry>.L_3:\l|<exit0>01b8:\ \ \ BRA\ `(.L_3);\l}"]
 ".L_3":exit0:e -> ".L_3":entry:n [style=solid];
 }
 }
