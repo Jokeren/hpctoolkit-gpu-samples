@@ -3,9 +3,9 @@ void vecAdd(float *l, float *r, float *result, size_t N) {
   size_t i = threadIdx.x;
 LABEL:
   if (l[i] > i) {
-    result[i] = l[i] - r[i];
+    result[i] = exp(l[i]);
   } else {
-    result[i] = l[i] + r[i];
+    result[i] = acosf(r[i]);
   }
   if (i < 5) {
     ++i;
