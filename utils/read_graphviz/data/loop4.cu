@@ -9,6 +9,7 @@ LABEL:
   }
   if (i < 5) {
     ++i;
+    l[i] = l[i] / 2.0;
     goto LABEL;
   }
 }
