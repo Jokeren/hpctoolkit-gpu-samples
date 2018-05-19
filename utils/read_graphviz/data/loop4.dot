@@ -1,0 +1,16 @@
+digraph f {
+subgraph "cluster__Z6vecAddPfS_S_m" {
+node [fontname="Courier",fontsize=10,shape=Mrecord];
+"_Z6vecAddPfS_S_m"
+[label="{<entry>	.global		_Z6vecAddPfS_S_m\l	.type		_Z6vecAddPfS_S_m,@function\l	.size		_Z6vecAddPfS_S_m,(.L_23\ -\ _Z6vecAddPfS_S_m)\l	.other		_Z6vecAddPfS_S_m,\<no\ object\>\l_Z6vecAddPfS_S_m:\l.text._Z6vecAddPfS_S_m:\l0008:\ \ \ MOV\ R1,\ c\[0x0\]\[0x20\];\l0010:\ \{\ MOV\ R13,\ RZ;\l/*0018*/\ \ \ S2R\ R0,\ SR_TID.X;\}\l0028:\ \ \ SHL\ R4,\ R0.reuse,\ 0x2;\l0030:\ \ \ SHR.U32\ R9,\ R0,\ 0x1e;\l0038:\ \ \ IADD\ R11.CC,\ R4.reuse,\ c\[0x0\]\[0x150\];\l0048:\ \ \ IADD.X\ R12,\ R9.reuse,\ c\[0x0\]\[0x154\];\l0050:\ \ \ IADD\ R10.CC,\ R4,\ c\[0x0\]\[0x148\];\l0058:\ \ \ IADD.X\ R7,\ R9,\ c\[0x0\]\[0x14c\];\l0068:\ \ \ IADD\ R4.CC,\ R4,\ c\[0x0\]\[0x140\];\l0070:\ \ \ MOV\ R8,\ R0;\l0078:\ \ \ IADD.X\ R9,\ R9,\ c\[0x0\]\[0x144\];\l}"]
+"_Z6vecAddPfS_S_m":entry:s -> ".L_1":entry:n [style=solid];
+node [fontname="Courier",fontsize=10,shape=Mrecord];
+".L_1"
+[label="{<entry>.L_1:\l0088:\ \ \ MOV\ R5,\ R9;\l0090:\ \ \ LDG.E\ R5,\ \[R4\];\l0098:\ \ \ MOV\ R6,\ R10;\l00a8:\ \ \ LDG.E\ R6,\ \[R6\];\l00b0:\ \ \ MOV\ R2,\ R8;\l00b8:\ \ \ MOV\ R3,\ R13;\l00c8:\ \ \ IADD32I\ RZ.CC,\ R8.reuse,\ -0x5;\l00d0:\ \ \ I2F.F32.U64\ R0,\ R2;\l00d8:\ \ \ ISETP.LT.U32.X.AND\ P1,\ PT,\ R13,\ RZ,\ PT;\l00e8:\ \ \ IADD32I\ R8.CC,\ R8,\ 0x1;\l00f0:\ \ \ MOV\ R2,\ R11;\l00f8:\ \ \ MOV\ R3,\ R12;\l0108:\ \ \ FSETP.GT.AND\ P0,\ PT,\ R5,\ R0,\ PT;\l0110:\ \ \ IADD.X\ R0,\ RZ,\ R13;\l0118:\ \ \ IADD32I\ R11.CC,\ R11,\ 0x4;\l0128:\ \ \ IADD.X\ R12,\ RZ,\ R12;\l0130:\ \ \ IADD32I\ R10.CC,\ R10,\ 0x4;\l0138:\ \ \ @P0\ FADD\ R6,\ -R6,\ -RZ;\l0148:\ \ \ IADD.X\ R7,\ RZ,\ R7;\l0150:\ \ \ IADD32I\ R4.CC,\ R4,\ 0x4;\l0158:\ \ \ MOV\ R13,\ R0;\l0168:\ \ \ FADD\ R5,\ R5,\ R6;\l0170:\ \ \ STG.E\ \[R2\],\ R5;\l|<exit0>0178:\ \{\ IADD.X\ R9,\ RZ,\ R9;\l/*0188*/\ \ \ @P1\ BRA\ `(.L_1);\}\l|<exit1>0190:\ \ \ EXIT;\l}"]
+".L_1":exit0:e -> ".L_1":entry:n [style=solid];
+node [fontname="Courier",fontsize=10,shape=Mrecord];
+".L_2"
+[label="{<entry>.L_2:\l|<exit0>0198:\ \ \ BRA\ `(.L_2);\l}"]
+".L_2":exit0:e -> ".L_2":entry:n [style=solid];
+}
+}

@@ -1,0 +1,11 @@
+digraph f {
+subgraph "cluster__Z6vecAddPfS_S_m" {
+node [fontname="Courier",fontsize=10,shape=Mrecord];
+"_Z6vecAddPfS_S_m"
+[label="{<entry>	.global		_Z6vecAddPfS_S_m\l	.type		_Z6vecAddPfS_S_m,@function\l	.size		_Z6vecAddPfS_S_m,(.L_20\ -\ _Z6vecAddPfS_S_m)\l	.other		_Z6vecAddPfS_S_m,\<no\ object\>\l_Z6vecAddPfS_S_m:\l.text._Z6vecAddPfS_S_m:\l0008:\ \ \ MOV\ R1,\ c\[0x0\]\[0x20\];\l0010:\ \ \ S2R\ R0,\ SR_TID.X;\l0018:\ \ \ SHL\ R6,\ R0.reuse,\ 0x2;\l0028:\ \{\ SHR.U32\ R7,\ R0,\ 0x1e\ \ SLOT\ 0;\l/*0030*/\ \ \ I2F.F32.U32\ R0,\ R0\ \ SLOT\ 1;\}\l0038:\ \ \ IADD\ R2.CC,\ R6,\ c\[0x0\]\[0x140\];\l0048:\ \ \ IADD.X\ R3,\ R7,\ c\[0x0\]\[0x144\];\l0050:\ \ \ LDG.E\ R2,\ \[R2\];\l0058:\ \ \ IADD\ R4.CC,\ R6,\ c\[0x0\]\[0x148\];\l0068:\ \ \ IADD.X\ R5,\ R7,\ c\[0x0\]\[0x14c\];\l0070:\ \ \ LDG.E\ R8,\ \[R4\];\l0078:\ \ \ IADD\ R6.CC,\ R6,\ c\[0x0\]\[0x150\];\l0088:\ \ \ IADD.X\ R7,\ R7,\ c\[0x0\]\[0x154\];\l0090:\ \ \ FSETP.GT.AND\ P0,\ PT,\ R2,\ R0,\ PT;\l0098:\ \ \ @P0\ FADD\ R8,\ -R8,\ -RZ;\l00a8:\ \ \ FADD\ R8,\ R2,\ R8;\l00b0:\ \ \ STG.E\ \[R6\],\ R8;\l|<exit0>00b8:\ \ \ EXIT;\l}"]
+node [fontname="Courier",fontsize=10,shape=Mrecord];
+".L_1"
+[label="{<entry>.L_1:\l|<exit0>00c8:\ \ \ BRA\ `(.L_1);\l}"]
+".L_1":exit0:e -> ".L_1":entry:n [style=solid];
+}
+}
