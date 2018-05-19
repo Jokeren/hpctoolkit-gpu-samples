@@ -8,7 +8,8 @@ CXX = g++
 
 SOURCES = \
 	main.cc \
-	graph_reader.cc
+	graph_reader.cc \
+	cfg_analyzer.cc
 
 OBJECTS = $(SOURCES:.cc=.o)
 
