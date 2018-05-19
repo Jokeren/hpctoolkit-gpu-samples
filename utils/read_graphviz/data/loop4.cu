@@ -5,11 +5,12 @@ LABEL:
   if (l[i] > i) {
     result[i] = exp(l[i]);
   } else {
-    result[i] = acosf(r[i]);
+    result[i] = acosf(l[i]);
   }
   if (i < 5) {
     ++i;
-    l[i] = l[i] / 2.0;
+    l[i] = r[i] / 2.0;
+    r[i] = r[i] / 2.0;
     goto LABEL;
   }
 }
