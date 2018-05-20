@@ -10,6 +10,7 @@
 struct Inst {
   int offset;
   std::string opcode;
+  std::string port;
   std::vector<std::string> operands;
 
   Inst(const std::string &inst_str) {

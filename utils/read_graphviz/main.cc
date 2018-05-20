@@ -2,12 +2,19 @@
 #include <sstream>
 #include <vector>
 #include "cfg.h"
+#include "graph.h"
 #include "cfg_analyzer.h"
+#include "cfg_parser.h"
 #include "graph_reader.h"
 
 int main() {
+  Graph graph;
+  CFGParser cfg_parser;
+  std::vector<Function *> functions;
+
   GraphReader graph_reader("sample.dot");
-  std::vector<Function *> functions = graph_reader.construct_cfg();
+  graph_reader.read(graph);
+  cfg_parser.parse(graph, functions);
 
   CFGAnalyzer analyzer(functions);
   std::vector<Call *> calls = analyzer.extract_calls();

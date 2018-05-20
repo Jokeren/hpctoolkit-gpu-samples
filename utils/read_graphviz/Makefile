@@ -9,7 +9,8 @@ CXX = g++
 SOURCES = \
 	main.cc \
 	graph_reader.cc \
-	cfg_analyzer.cc
+	cfg_analyzer.cc \
+	cfg_parser.cc
 
 OBJECTS = $(SOURCES:.cc=.o)
 

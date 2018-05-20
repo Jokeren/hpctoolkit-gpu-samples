@@ -6,10 +6,23 @@
 #include <string>
 #include "inst.h"
 
+struct Block;
+
+struct Target {
+  Inst *inst;
+  Block *block;
+
+  Target(Inst *inst, Block *block) : inst(inst), block(block) {}
+
+  bool operator<(const Target &other) {
+    return this->inst->offset < other.inst->offset;
+  }
+};
+
 
 struct Block {
   std::vector<Inst *> insts;
-  std::vector<Block *> targets;
+  std::vector<Target *> targets;
   size_t id;
   std::string name;
 
@@ -32,16 +45,19 @@ struct Function {
   size_t id;
   std::string name;
 
-  Function(size_t id, std::string &name) : id(id), name(name) {}
+  Function(size_t id, const std::string &name) : id(id), name(name) {}
 };
 
 
 struct LoopEntry {
   Block *entry_block; 
   Block *back_edge_block;
+  Inst *back_edge_inst;
 
-  LoopEntry(Block *entry_block, Block *back_edge_block) :
-    entry_block(entry_block), back_edge_block(back_edge_block) {}
+  LoopEntry(Block *entry_block) : entry_block(entry_block) {}
+
+  LoopEntry(Block *entry_block, Block *back_edge_block, Inst *back_edge_inst) :
+    entry_block(entry_block), back_edge_block(back_edge_block), back_edge_inst(back_edge_inst) {}
 };
 
 

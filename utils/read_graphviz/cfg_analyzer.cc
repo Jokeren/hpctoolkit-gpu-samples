@@ -52,9 +52,9 @@ Block *CFGAnalyzer::WMZC_DFS(Function *func, Block* b0, size_t pos) {
   // same loop nesting structure for an individual binary 
   // in all executions, we sort the target blocks using
   // the start adress.
-  std::vector<Block *> visited_order(b0->targets.begin(), b0->targets.end());
-  sort(visited_order.begin(), visited_order.end());
-  for (auto b : visited_order) {
+  std::vector<Target *> visited_order(b0->targets.begin(), b0->targets.end());
+  for (auto t : visited_order) {
+    Block *b = t->block;
     if (_visited_blocks.find(b) == _visited_blocks.end()) {
       // case A, new
       Block *nh = WMZC_DFS(func, b, pos + 1);
@@ -65,7 +65,7 @@ Block *CFGAnalyzer::WMZC_DFS(Function *func, Block* b0, size_t pos) {
         if (_block_loop[b] == NULL)
           _block_loop[b] = new Loop(func);
         WMZC_tag_head(b0, b);
-        _block_loop[b]->entries.push_back(new LoopEntry(b, b0));
+        _block_loop[b]->entries.push_back(new LoopEntry(b));
       } else if (_block_header[b] == NULL) {
         // case C, do nothing
       } else {
@@ -76,14 +76,14 @@ Block *CFGAnalyzer::WMZC_DFS(Function *func, Block* b0, size_t pos) {
         } else {
           // case E
           // Mark b and (b0,b) as re-entry
-          _block_loop[h]->entries.push_back(new LoopEntry(b, NULL));
+          _block_loop[h]->entries.push_back(new LoopEntry(b));
           while (_block_header[h] != NULL) {
             h = _block_header[h];
             if (_DFS_pos[h] > 0) {
               WMZC_tag_head(b0, h);
               break;
             }  
-            _block_loop[h]->entries.push_back(new LoopEntry(b, NULL));
+            _block_loop[h]->entries.push_back(new LoopEntry(b));
           }
         }
       }
@@ -148,17 +148,21 @@ std::vector<Loop *> CFGAnalyzer::extract_loops() {
       }
     }
 
+    // Enumerate entry back edge blocks and insts
     for (auto lit : loop_set) {
+      std::vector<LoopEntry *> loop_entries;
       Loop *loop = lit;
+      // Fill back_edge_block
       for (auto entry : loop->entries) {
-        if (entry->back_edge_block == NULL) {
-          for (auto block : loop->blocks) {
-            if (std::find(block->targets.begin(), block->targets.end(), entry->entry_block) != block->targets.end()) {
-              entry->back_edge_block = block;
+        for (auto block : loop->blocks) {
+          for (auto target : block->targets) {
+            if (target->block == entry->entry_block) {
+              loop_entries.push_back(new LoopEntry(entry->entry_block, block, target->inst));
             }
           }
         }
       }
+      loop->entries = loop_entries;
     }
 
     for (auto lit : loop_set) {
