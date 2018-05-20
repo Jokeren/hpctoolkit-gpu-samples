@@ -32,7 +32,7 @@ struct Edge {
 
 struct Graph {
   // vertex_id->vertex
-  std::unordered_map<size_t, Vertex *> vertices;
+  std::vector<Vertex *> vertices;
   std::vector<Edge *> edges;
 };
 

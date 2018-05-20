@@ -14,19 +14,6 @@ void CFGParser::parse_inst_strings(
 }
 
 
-void CFGParser::parse_target_inst(
-  const Block *block,
-  const std::vector<std::string> &port,
-  Inst *&target_inst) {
-  for (auto inst : block->insts) {
-    if (inst->port == port[0]) {
-      target_inst = inst;
-      return;
-    }
-  }
-}
-
-
 size_t CFGParser::find_block_parent(size_t node) {
   auto iter = _block_parent.find(node);
   if (iter == _block_parent.end()) {
@@ -50,8 +37,7 @@ void CFGParser::parse(const Graph &graph, std::vector<Function *> &functions) {
   _block_parent.clear();
 
   // Parse every vertex to build blocks
-  for (auto vit : graph.vertices) {
-    Vertex *vertex = vit.second;
+  for (auto vertex : graph.vertices) {
     Block *block = new Block(vertex->id, vertex->name);
 
     std::deque<std::string> inst_strings;
@@ -72,7 +58,12 @@ void CFGParser::parse(const Graph &graph, std::vector<Function *> &functions) {
     Block *source_block = block_map[edge->source_id];
     // Link blocks
     Inst *target_inst;
-    parse_target_inst(source_block, edge->source_port, target_inst);
+    for (auto inst : source_block->insts) {
+      if (inst->port == edge->source_port[0]) {
+        target_inst = inst;
+        break;
+      }
+    }
     source_block->targets.push_back(new Target(target_inst, target_block));
   }
 

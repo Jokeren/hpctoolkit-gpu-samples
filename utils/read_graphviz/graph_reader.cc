@@ -26,8 +26,7 @@ void GraphReader::read_vertices(
   for (auto node : result.nodes) {
     const std::string &vertex_name = node.first;
     const std::string &vertex_label = (node.second)["label"];
-    Vertex *vertex = new Vertex(vertex_id, vertex_name, vertex_label);
-    graph.vertices[vertex_id]->id = vertex_id;
+    graph.vertices.push_back(new Vertex(vertex_id, vertex_name, vertex_label));
     vertex_name_to_id[vertex_name] = vertex_id;
     ++vertex_id;
   }

@@ -17,6 +17,11 @@ struct Inst {
     std::istringstream iss(inst_str);
     std::string s;
     if (std::getline(iss, s, ':')) {
+      if (s.find("<") != std::string::npos) {
+        auto pos = s.find(">");
+        this->port = s.substr(1, pos - 1);
+        s = s.substr(pos + 1); 
+      }
       std::stringstream ss;
       ss << std::hex << s;
       ss >> offset;

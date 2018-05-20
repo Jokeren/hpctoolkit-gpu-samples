@@ -17,8 +17,6 @@ class CFGParser {
  private:
   void parse_inst_strings(const std::string &label, std::deque<std::string> &inst_strings);
 
-  void parse_target_inst(const Block *block, const std::vector<std::string> &port, Inst *&target_inst);
-
   size_t find_block_parent(size_t node);
 
   void unite_blocks(size_t l, size_t r);
