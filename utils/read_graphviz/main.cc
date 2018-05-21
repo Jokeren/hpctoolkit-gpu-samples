@@ -43,6 +43,7 @@ int main(int argc, char *argv[]) {
       for (auto block : loop->blocks) {
         std::cout << block->name << std::endl;
       }
+      std::cout << "Loop child blocks :" << std::endl;
       for (auto block : loop->child_blocks) {
         std::cout << block->name << std::endl;
       }

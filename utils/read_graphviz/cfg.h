@@ -4,6 +4,7 @@
 #include <sstream>
 #include <vector>
 #include <string>
+#include <unordered_set>
 #include "inst.h"
 
 struct Block;
@@ -63,9 +64,9 @@ struct LoopEntry {
 
 struct Loop {
   std::vector<LoopEntry *> entries;
-  std::vector<Loop *> child_loops;
-  std::vector<Block *> blocks;
-  std::vector<Block *> child_blocks;
+  std::unordered_set<Loop *> child_loops;
+  std::unordered_set<Block *> blocks;
+  std::unordered_set<Block *> child_blocks;
   Function *function;
 
   Loop(Function *function) : function(function) {}
