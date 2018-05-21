@@ -102,31 +102,27 @@ void CFGAnalyzer::create_loop_hierarchy(Block *cur) {
   if(cur_loop == NULL) 
     return;
 
-  std::unordered_set<Loop *> loop_filter;
-  std::unordered_set<Block *> block_filter;
+  std::unordered_set<Block *> block_erase;
   for (auto child_block : cur_loop->blocks) {
     auto child_loop = _block_loop[child_block];
+    create_loop_hierarchy(child_block);
     if (child_loop != NULL) {
-      if (loop_filter.find(child_loop) == loop_filter.end()) {
-        loop_filter.insert(child_loop);
-        cur_loop->child_loops.push_back(child_loop);
-        for (auto cb : child_loop->blocks) {
-          if (block_filter.find(cb) == block_filter.end()) {
-            block_filter.insert(cb);
-            cur_loop->child_blocks.push_back(cb);
-          }
-        }
-        for (auto ccb : child_loop->child_blocks) {
-          if (block_filter.find(ccb) == block_filter.end()) {
-            block_filter.insert(ccb);
-            cur_loop->child_blocks.push_back(ccb);
-          }
-        }
+      block_erase.insert(child_block);
+      cur_loop->child_loops.insert(child_loop);
+      for (auto cb : child_loop->blocks) {
+        cur_loop->child_blocks.insert(cb);
+      }
+      for (auto ccb : child_loop->child_blocks) {
+        cur_loop->child_blocks.insert(ccb);
       }
     }
-    create_loop_hierarchy(child_block);
   }
-  cur_loop->blocks.push_back(cur);
+
+  cur_loop->blocks.insert(cur);
+  for (auto block : block_erase) {
+    cur_loop->blocks.erase(block);
+    cur_loop->child_blocks.insert(block);
+  }
 }
 
 
@@ -157,7 +153,7 @@ std::vector<Loop *> CFGAnalyzer::extract_loops() {
 
     for (auto block : function->blocks) {
       if (_block_header[block] != NULL) {
-        _block_loop[_block_header[block]]->blocks.push_back(block);
+        _block_loop[_block_header[block]]->blocks.insert(block);
       }
       //std::cout << "Block header: " << std::endl;
       //std::cout << _block_header[block]->name << std::endl;
