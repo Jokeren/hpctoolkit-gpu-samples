@@ -13,7 +13,12 @@ struct Inst {
   std::string port;
   std::vector<std::string> operands;
 
-  Inst(const std::string &inst_str) {
+  Inst(std::string &inst_str) {
+    if (inst_str[0] == '/') {  // Dual issue
+      inst_str = inst_str.substr(2);
+      auto pos = inst_str.find("*/");
+      inst_str.replace(pos, 2, "");
+    }
     std::istringstream iss(inst_str);
     std::string s;
     if (std::getline(iss, s, ':')) {

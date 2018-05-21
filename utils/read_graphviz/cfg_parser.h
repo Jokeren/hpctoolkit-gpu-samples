@@ -11,7 +11,7 @@
 
 class CFGParser {
  public:
-  CFGParser() {}
+  CFGParser() : _block_parent(0) {}
   void parse(const Graph &graph, std::vector<Function *> &functions);
 
  private:
@@ -22,7 +22,7 @@ class CFGParser {
   void unite_blocks(size_t l, size_t r);
 
  private:
-  std::unordered_map<size_t, size_t > _block_parent;
+  std::vector<size_t> _block_parent;
 };
 
 #endif

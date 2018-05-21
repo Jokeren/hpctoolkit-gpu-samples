@@ -14,7 +14,7 @@ class CFGAnalyzer {
 
  private:
   Block *WMZC_DFS(Function *func, Block *b0, size_t pos);
-  void WMZC_tag_head(Block *b, Block *h);
+  bool WMZC_tag_head(Block *b, Block *h);
   void create_loop_hierarchy(Block *cur);
 
  private:

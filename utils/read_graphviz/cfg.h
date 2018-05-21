@@ -14,7 +14,7 @@ struct Target {
 
   Target(Inst *inst, Block *block) : inst(inst), block(block) {}
 
-  bool operator<(const Target &other) {
+  bool operator<(const Target &other) const {
     return this->inst->offset < other.inst->offset;
   }
 };
@@ -28,7 +28,7 @@ struct Block {
 
   Block(size_t id, std::string &name) : id(id), name(name) {}
 
-  bool operator<(const Block &other) {
+  bool operator<(const Block &other) const {
     if (this->insts.size() == 0) {
       return true;
     } else if (other.insts.size() == 0) {
@@ -65,6 +65,7 @@ struct Loop {
   std::vector<LoopEntry *> entries;
   std::vector<Loop *> child_loops;
   std::vector<Block *> blocks;
+  std::vector<Block *> child_blocks;
   Function *function;
 
   Loop(Function *function) : function(function) {}
@@ -72,12 +73,13 @@ struct Loop {
 
 
 struct Call {
-  Block *caller_block; 
+  Inst *inst;
+  Block *block; 
   Function *caller_function;
   Function *callee_function;
 
-  Call(Block *caller_block, Function *caller_function, Function *callee_function) :
-    caller_block(caller_block), caller_function(caller_function), callee_function(callee_function) {}
+  Call(Inst *inst, Block *block, Function *caller_function, Function *callee_function) :
+    inst(inst), block(block), caller_function(caller_function), callee_function(callee_function) {}
 };
 
 #endif

@@ -5,10 +5,9 @@ std::vector<Call *> CFGAnalyzer::extract_calls() {
   std::vector<Call *> calls;
   for (auto function : _functions) {
     for (auto block : function->blocks) {
-      size_t num_insts = block->insts.size();
-      if (num_insts > 0) {
-        Inst *inst = block->insts[num_insts - 1];
-        if (inst->opcode.find("CALL") != std::string::npos) {
+      for (auto inst : block->insts) {
+        if (inst->opcode.find("CALL") != std::string::npos || // sm_70
+          inst->opcode.find("CAL") != std::string::npos) { // sm_60
           std::string &operand = inst->operands[0];
           std::string callee = operand.substr(2, operand.size() - 4);
           Function *callee_function;
@@ -18,7 +17,7 @@ std::vector<Call *> CFGAnalyzer::extract_calls() {
               break;
             }
           }
-          calls.push_back(new Call(block, function, callee_function));
+          calls.push_back(new Call(inst, block, function, callee_function));
         }
       }
     }
@@ -27,13 +26,13 @@ std::vector<Call *> CFGAnalyzer::extract_calls() {
 }
 
 
-void CFGAnalyzer::WMZC_tag_head(Block* b, Block* h) {
-  if (b == h || h == NULL) return;
+bool CFGAnalyzer::WMZC_tag_head(Block* b, Block* h) {
+  if (b == h || h == NULL) return false;
   Block *cur1, *cur2;
   cur1 = b; cur2 = h;
   while (_block_header[cur1] != NULL) {
     Block* ih = _block_header[cur1];
-    if (ih == cur2) return;
+    if (ih == cur2) return true;
     if (_DFS_pos[ih] < _DFS_pos[cur2]) { // Can we guarantee both are not 0?
       _block_header[cur1] = cur2;
       cur1 = cur2;
@@ -41,6 +40,7 @@ void CFGAnalyzer::WMZC_tag_head(Block* b, Block* h) {
     } else cur1 = ih;
   }
   _block_header[cur1] = cur2;
+  return true;
 }
 
 
@@ -64,8 +64,9 @@ Block *CFGAnalyzer::WMZC_DFS(Function *func, Block* b0, size_t pos) {
         // case B
         if (_block_loop[b] == NULL)
           _block_loop[b] = new Loop(func);
-        WMZC_tag_head(b0, b);
-        _block_loop[b]->entries.push_back(new LoopEntry(b));
+        if (WMZC_tag_head(b0, b)) {
+          _block_loop[b]->entries.push_back(new LoopEntry(b));
+        }
       } else if (_block_header[b] == NULL) {
         // case C, do nothing
       } else {
@@ -102,16 +103,30 @@ void CFGAnalyzer::create_loop_hierarchy(Block *cur) {
     return;
 
   std::unordered_set<Loop *> loop_filter;
+  std::unordered_set<Block *> block_filter;
   for (auto child_block : cur_loop->blocks) {
     auto child_loop = _block_loop[child_block];
     if (child_loop != NULL) {
       if (loop_filter.find(child_loop) == loop_filter.end()) {
         loop_filter.insert(child_loop);
         cur_loop->child_loops.push_back(child_loop);
+        for (auto cb : child_loop->blocks) {
+          if (block_filter.find(cb) == block_filter.end()) {
+            block_filter.insert(cb);
+            cur_loop->child_blocks.push_back(cb);
+          }
+        }
+        for (auto ccb : child_loop->child_blocks) {
+          if (block_filter.find(ccb) == block_filter.end()) {
+            block_filter.insert(ccb);
+            cur_loop->child_blocks.push_back(ccb);
+          }
+        }
       }
     }
     create_loop_hierarchy(child_block);
   }
+  cur_loop->blocks.push_back(cur);
 }
 
 
@@ -129,10 +144,25 @@ std::vector<Loop *> CFGAnalyzer::extract_loops() {
     // Apply loop finding algorithm
     WMZC_DFS(function, function->blocks[0], 1);
 
+    // Self contained loops
     for (auto block : function->blocks) {
-      if (_block_header[block] == NULL)
-        continue;
-      _block_loop[_block_header[block]]->blocks.push_back(block);
+      for (auto target : block->targets) {
+        if (target->block == block) {
+          _block_header[block] = block;
+          _block_loop[block]->entries.push_back(new LoopEntry(block));
+          break;
+        }
+      }
+    }
+
+    for (auto block : function->blocks) {
+      if (_block_header[block] != NULL) {
+        _block_loop[_block_header[block]]->blocks.push_back(block);
+      }
+      //std::cout << "Block header: " << std::endl;
+      //std::cout << _block_header[block]->name << std::endl;
+      //std::cout << "Blocks: " << std::endl;
+      //std::cout << block->name << std::endl;
     }
 
     for (auto block : function->blocks) {
@@ -155,6 +185,13 @@ std::vector<Loop *> CFGAnalyzer::extract_loops() {
       // Fill back_edge_block
       for (auto entry : loop->entries) {
         for (auto block : loop->blocks) {
+          for (auto target : block->targets) {
+            if (target->block == entry->entry_block) {
+              loop_entries.push_back(new LoopEntry(entry->entry_block, block, target->inst));
+            }
+          }
+        }
+        for (auto block : loop->child_blocks) {
           for (auto target : block->targets) {
             if (target->block == entry->entry_block) {
               loop_entries.push_back(new LoopEntry(entry->entry_block, block, target->inst));
