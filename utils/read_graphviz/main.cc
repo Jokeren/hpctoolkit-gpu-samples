@@ -23,12 +23,12 @@ int main(int argc, char *argv[]) {
     for (auto block : function->blocks) {
       std::cout << "Block: " << block->name << std::endl;
       for (auto inst : block->insts) {
-        std::cout << "Inst: " << std::endl;
-        std::cout << "offset: " << inst->offset << std::endl;
-        std::cout << "opcode: " << inst->opcode << std::endl;
-        std::cout << "port: " << inst->port << std::endl;
-        std::cout << "predicate: " << inst->predicate << std::endl;
-        std::cout << "operands: ";
+        std::cout << "Dual: " << inst->dual << " ";
+        std::cout << "Port: " << inst->port << " ";
+        std::cout << "Inst: ";
+        std::cout << "<" << inst->offset << "> ";
+        std::cout << inst->predicate << " ";
+        std::cout << inst->opcode << " ";
         for (auto op : inst->operands) {
           std::cout << "[" << op << "]";
         }
