@@ -9,6 +9,7 @@
 
 struct Inst {
   int offset;
+  std::string predicate;
   std::string opcode;
   std::string port;
   std::vector<std::string> operands;
@@ -36,7 +37,11 @@ struct Inst {
         while (std::getline(iss, s)) {
           if (s != "") {
             if (opcode == "") {
-              opcode = s;
+              if (s.find("@") != std::string::npos) {
+                predicate = s;
+              } else {
+                opcode = s;
+              }
             } else {
               operands.push_back(s);
             }

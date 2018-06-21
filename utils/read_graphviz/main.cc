@@ -17,6 +17,26 @@ int main(int argc, char *argv[]) {
   graph_reader.read(graph);
   cfg_parser.parse(graph, functions);
 
+  std::cout << "Block info" << std::endl;
+  for (auto function : functions) {
+    std::cout << "Func: " << function->name << std::endl;
+    for (auto block : function->blocks) {
+      std::cout << "Block: " << block->name << std::endl;
+      for (auto inst : block->insts) {
+        std::cout << "Inst: " << std::endl;
+        std::cout << "offset: " << inst->offset << std::endl;
+        std::cout << "opcode: " << inst->opcode << std::endl;
+        std::cout << "port: " << inst->port << std::endl;
+        std::cout << "predicate: " << inst->predicate << std::endl;
+        std::cout << "operands: ";
+        for (auto op : inst->operands) {
+          std::cout << "[" << op << "]";
+        }
+        std::cout << std::endl;
+      }
+    }
+  }
+
   std::cout << "Call info" << std::endl;
   CFGAnalyzer analyzer(functions);
   std::vector<Call *> calls = analyzer.extract_calls();
