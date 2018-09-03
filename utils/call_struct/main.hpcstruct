@@ -1,0 +1,135 @@
+<?xml version="1.0"?>
+<!DOCTYPE HPCToolkitStructure [
+<!-- ******************************************************************** -->
+<!-- HPCToolkit Structure DTD                                             -->
+<!-- Version 4.7                                                          -->
+<!-- ******************************************************************** -->
+
+<!ELEMENT HPCToolkitStructure (LM)*>
+<!ATTLIST HPCToolkitStructure
+	version CDATA #REQUIRED
+	i       CDATA #REQUIRED
+	n       CDATA #IMPLIED>
+  <!-- Load module: -->
+  <!--   (i)d: unique identifier for cross referencing -->
+  <!--   (n)ame -->
+  <!--   (l)ine range: "beg-end" (inclusive range) -->
+  <!--   (v)ma-range-set: "{[beg-end), [beg-end)...}" -->
+  <!--   (t)arget: target function address -->
+  <!ELEMENT LM (F|P)*>
+  <!ATTLIST LM
+	i CDATA #REQUIRED
+	n CDATA #REQUIRED
+	v CDATA #IMPLIED>
+  <!-- File: -->
+  <!ELEMENT F (P|L|S)*>
+  <!ATTLIST F
+	i CDATA #REQUIRED
+	n CDATA #REQUIRED>
+  <!-- Procedure: ln=link name (if different than name) -->
+  <!ELEMENT P (P|A|L|S|C)*>
+  <!ATTLIST P
+	i  CDATA #REQUIRED
+	n  CDATA #REQUIRED
+	ln CDATA #IMPLIED
+	l  CDATA #IMPLIED
+	s  CDATA #IMPLIED
+	v  CDATA #IMPLIED>
+  <!-- Alien: (f)ilename -->
+  <!ELEMENT A (A|L|S|C)*>
+  <!ATTLIST A
+	i CDATA #REQUIRED
+	f CDATA #IMPLIED
+	n CDATA #IMPLIED
+	ln CDATA #IMPLIED
+	l CDATA #IMPLIED
+	v CDATA #IMPLIED>
+  <!-- Loop -->
+  <!ELEMENT L (A|L|S|C)*>
+  <!ATTLIST L
+	i CDATA #REQUIRED
+	l CDATA #REQUIRED
+	f CDATA #IMPLIED
+	v CDATA #IMPLIED>
+  <!-- Statement -->
+  <!ELEMENT S (S)*>
+  <!ATTLIST S
+	i CDATA #REQUIRED
+	l CDATA #REQUIRED
+	v CDATA #IMPLIED>
+  <!-- Callsite (a special Statement) -->
+  <!ELEMENT C (C)*>
+  <!ATTLIST C
+	i CDATA #REQUIRED
+	l CDATA #REQUIRED
+	v CDATA #IMPLIED
+  t CDATA #IMPLIED>
+]>
+<HPCToolkitStructure i="0" version="4.7" n="">
+<LM i="2" n="/home/kz21/Codes/hpctoolkit-gpu-samples/utils/call_struct/main" v="{}">
+  <F i="3" n="/home/kz21/Codes/hpctoolkit-gpu-samples/utils/call_struct/main.cc">
+    <P i="4" n="func" ln="_Z4funcv" l="9" v="{[0x40053d-0x40053e)}">
+      <S i="5" l="9" v="{[0x40053d-0x400541)}"/>
+      <S i="6" l="10" v="{[0x400541-0x40054a)}"/>
+      <S i="7" l="14" v="{[0x400586-0x400588)}"/>
+      <L i="8" l="10" f="/home/kz21/Codes/hpctoolkit-gpu-samples/utils/call_struct/main.cc" v="{[0x400580-0x400581)}">
+        <S i="9" l="10" v="{[0x40057c-0x400586)}"/>
+        <S i="10" l="11" v="{[0x40054a-0x400567)}"/>
+        <S i="11" l="12" v="{[0x400567-0x40057c)}"/>
+      </L>
+    </P>
+    <P i="12" n="main" l="17" v="{[0x400588-0x400589)}">
+      <S i="13" l="17" v="{[0x400588-0x400597)}"/>
+      <S i="14" l="18" v="{[0x400597-0x4005a0)}"/>
+      <S i="15" l="21" v="{[0x4005b2-0x4005c9)}"/>
+      <S i="16" l="22" v="{[0x4005c9-0x4005ce)}"/>
+      <S i="17" l="23" v="{[0x4005ce-0x4005d0)}"/>
+      <L i="18" l="18" f="/home/kz21/Codes/hpctoolkit-gpu-samples/utils/call_struct/main.cc" v="{[0x4005a9-0x4005aa)}">
+        <S i="19" l="18" v="{[0x4005a5-0x4005b2)}"/>
+        <C i="20" l="19" v="{[0x4005a0-0x4005a5)}" t="func"/>
+      </L>
+    </P>
+  </F>
+  <F i="21" n="&lt;unknown file&gt; [main]">
+    <P i="22" n="_init" l="0" v="{[0x4003f0-0x4003f1)}">
+      <S i="23" l="0" v="{[0x4003f0-0x40040a)}"/>
+    </P>
+    <P i="24" n="printf" l="0" v="{[0x400420-0x400421)}">
+      <S i="25" l="0" v="{[0x400420-0x400430)}"/>
+    </P>
+    <P i="26" n="__libc_start_main" l="0" v="{[0x400430-0x400431)}">
+      <S i="27" l="0" v="{[0x400430-0x400440)}"/>
+    </P>
+    <P i="28" n="targ400440" l="0" v="{[0x400440-0x400441)}">
+      <S i="29" l="0" v="{[0x400440-0x400448)}"/>
+    </P>
+    <P i="30" n="_start" l="0" v="{[0x400450-0x400451)}">
+      <S i="31" l="0" v="{[0x400450-0x400480)}"/>
+    </P>
+    <P i="32" n="deregister_tm_clones" l="0" v="{[0x400480-0x400481)}">
+      <S i="33" l="0" v="{[0x400480-0x4004b0)}"/>
+    </P>
+    <P i="34" n="register_tm_clones" l="0" v="{[0x4004b0-0x4004b1)}">
+      <S i="35" l="0" v="{[0x4004b0-0x4004f0)}"/>
+    </P>
+    <P i="36" n="__do_global_dtors_aux" l="0" v="{[0x4004f0-0x4004f1)}">
+      <S i="37" l="0" v="{[0x4004f0-0x400510)}"/>
+    </P>
+    <P i="38" n="frame_dummy" l="0" v="{[0x400510-0x400511)}">
+      <S i="39" l="0" v="{[0x400510-0x40053d)}"/>
+    </P>
+    <P i="40" n="__libc_csu_init" l="0" v="{[0x4005d0-0x4005d1)}">
+      <S i="41" l="0" v="{[0x4005d0-0x400610) [0x400626-0x400635)}"/>
+      <L i="42" l="0" f="&lt;unknown file&gt; [main]" v="{[0x400610-0x400611)}">
+        <S i="43" l="0" v="{[0x400610-0x400626)}"/>
+      </L>
+    </P>
+    <P i="44" n="__libc_csu_fini" l="0" v="{[0x400640-0x400641)}">
+      <S i="45" l="0" v="{[0x400640-0x400642)}"/>
+    </P>
+    <P i="46" n="_fini" l="0" v="{[0x400644-0x400645)}">
+      <S i="47" l="0" v="{[0x400644-0x40064d)}"/>
+    </P>
+  </F>
+</LM>
+</HPCToolkitStructure>
