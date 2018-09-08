@@ -1,37 +1,44 @@
-
 SHELL = /bin/sh
-.SUFFIXES: .cc .o
 
 EXEC = main
 
-CUDA ?= /sw/summitdev/cuda/9.0.69
+CUBIN = vecAdd
 
 CXX = nvcc
 
-SOURCES = \
-	main.cu
-
-OBJECTS = $(SOURCES:.cc=.o)
-
 USE_MPI =
 mpi =
+# Tuning flags for MPI
 ifdef USE_MPI
 mpi = -DUSE_MPI=$(USE_MPI)
 endif
 
+USE_POWER =
+arch = 
+# Tuning flags for Power 8
+ifdef USE_POWER
+archflag ?= -mcpu=pwr8 -mtune=pwr8 
+endif
+
 showflag =
 oflag = -g
-archflag ?= -mcpu=pwr8 -mtune=pwr8 
+cuda_arch = sm_70
 
-# Tuning flags for Power 8
-CXXFLAGS = -Xcompiler "$(oflag) $(shared) $(mpi) $(showflag) -fopenmp" -lcudart -lcuda -G -g
+CXXFLAGS = -Xcompiler "$(oflag) $(arch) $(mpi) $(showflag) -fopenmp" -lcudart -lcuda $(oflag)
 
-all: $(EXEC)
+all: exec cubin
+	
+exec: $(EXEC)
 
-main: $(OBJECTS)
-	@echo "Linking"
-	$(CXX) $(OBJECTS) $(LDFLAGS) -lstdc++ -lm -o $@ $(showflag) $(CXXFLAGS)
+$(EXEC): % : %.cu
+	$(CXX) $(LDFLAGS) -lstdc++ -lm -o $@ $< $(showflag) $(CXXFLAGS)
+
+cubin: $(CUBIN)
+
+$(CUBIN): % : %.cu
+	$(CXX) -arch $(cuda_arch) -cubin $< -lineinfo 
 
 clean:
 	/bin/rm -f *.o *~ *.tgt* $(EXEC)
 	/bin/rm -rf *.dSYM
+	/bin/rm -rf tmp *.dot *.hpcstruct *.cubin
