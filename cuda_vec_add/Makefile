@@ -35,3 +35,4 @@ main: $(OBJECTS)
 clean:
 	/bin/rm -f *.o *~ *.tgt* $(EXEC)
 	/bin/rm -rf *.dSYM
+	/bin/rm -rf *.hpcstruct
