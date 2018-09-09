@@ -18,7 +18,8 @@
 
 
 static size_t N = 1000;
-static size_t iter = 10;
+static size_t iter1 = 2;
+static size_t iter2 = 4;
 
 void init(int *p, size_t size) {
   for (size_t i = 0; i < size; ++i) {
@@ -77,8 +78,8 @@ int main(int argc, char *argv[]) {
       DRIVER_API_CALL(cuMemcpyHtoD(dl1, l1, N * sizeof(int))); 
       DRIVER_API_CALL(cuMemcpyHtoD(dr1, r1, N * sizeof(int))); 
 
-      void *args[5] = {
-        &dl1, &dr1, &dp1, &N, &iter
+      void *args[6] = {
+        &dl1, &dr1, &dp1, &N, &iter1, &iter2
       };
 
       DRIVER_API_CALL(cuLaunchKernel(vecAdd, blocks, 1, 1, threads, 1, 1, 0, 0, args, 0));
@@ -96,8 +97,8 @@ int main(int argc, char *argv[]) {
       DRIVER_API_CALL(cuMemcpyHtoD(dl2, l2, N * sizeof(int))); 
       DRIVER_API_CALL(cuMemcpyHtoD(dr2, r2, N * sizeof(int))); 
 
-      void *args[5] = {
-        &dl2, &dr2, &dp2, &N, &iter
+      void *args[6] = {
+        &dl2, &dr2, &dp2, &N, &iter1, &iter2
       };
 
       DRIVER_API_CALL(cuLaunchKernel(vecAdd, blocks, 1, 1, threads, 1, 1, 0, 0, args, 0));
