@@ -1,0 +1,101 @@
+<?xml version="1.0"?>
+<!DOCTYPE HPCToolkitStructure [
+<!-- ******************************************************************** -->
+<!-- HPCToolkit Structure DTD                                             -->
+<!-- Version 4.7                                                          -->
+<!-- ******************************************************************** -->
+
+<!ELEMENT HPCToolkitStructure (LM)*>
+<!ATTLIST HPCToolkitStructure
+	version CDATA #REQUIRED
+	i       CDATA #REQUIRED
+	n       CDATA #IMPLIED>
+  <!-- Load module: -->
+  <!--   (i)d: unique identifier for cross referencing -->
+  <!--   (n)ame -->
+  <!--   (l)ine range: "beg-end" (inclusive range) -->
+  <!--   (v)ma-range-set: "{[beg-end), [beg-end)...}" -->
+  <!--   (t)arget: target function address -->
+  <!--   (d)evice: device name -->
+  <!ELEMENT LM (F|P)*>
+  <!ATTLIST LM
+	i CDATA #REQUIRED
+	n CDATA #REQUIRED
+	v CDATA #IMPLIED>
+  <!-- File: -->
+  <!ELEMENT F (P|L|S)*>
+  <!ATTLIST F
+	i CDATA #REQUIRED
+	n CDATA #REQUIRED>
+  <!-- Procedure: ln=link name (if different than name) -->
+  <!ELEMENT P (P|A|L|S|C)*>
+  <!ATTLIST P
+	i  CDATA #REQUIRED
+	n  CDATA #REQUIRED
+	ln CDATA #IMPLIED
+	l  CDATA #IMPLIED
+	s  CDATA #IMPLIED
+	v  CDATA #IMPLIED>
+  <!-- Alien: (f)ilename -->
+  <!ELEMENT A (A|L|S|C)*>
+  <!ATTLIST A
+	i CDATA #REQUIRED
+	f CDATA #IMPLIED
+	n CDATA #IMPLIED
+	ln CDATA #IMPLIED
+	l CDATA #IMPLIED
+	v CDATA #IMPLIED>
+  <!-- Loop -->
+  <!ELEMENT L (A|L|S|C)*>
+  <!ATTLIST L
+	i CDATA #REQUIRED
+	l CDATA #REQUIRED
+	f CDATA #IMPLIED
+	v CDATA #IMPLIED>
+  <!-- Statement -->
+  <!ELEMENT S EMPTY>
+  <!ATTLIST S
+	i CDATA #REQUIRED
+	l CDATA #REQUIRED
+	v CDATA #IMPLIED>
+  <!-- Callsite (a special Statement) -->
+  <!ELEMENT C (C)*>
+  <!ATTLIST C
+	i CDATA #REQUIRED
+	l CDATA #REQUIRED
+	v CDATA #IMPLIED
+	t CDATA #IMPLIED
+  d CDATA #IMPLIED>
+]>
+<HPCToolkitStructure i="0" version="4.7" n="">
+<LM i="2" n="/home/kz21/Codes/hpctoolkit-gpu-samples/utils/read_graphviz/data/loop4.cubin" v="{}">
+  <F i="3" n="/home/kz21/Codes/hpctoolkit-gpu-samples/utils/read_graphviz/data/loop4.cu">
+    <P i="4" n="vecAdd" ln="_Z6vecAddPfS_S_m" l="3" v="{[0x1400-0x1401)}">
+      <S i="5" l="3" v="{[0x1420-0x1450)}"/>
+      <S i="6" l="5" v="{[0x1400-0x1420) [0x1450-0x15e0)}"/>
+      <S i="7" l="9" v="{[0x1750-0x17e0) [0x17f0-0x1800)}"/>
+      <S i="8" l="11" v="{[0x15f0-0x1620)}"/>
+      <S i="9" l="12" v="{[0x16f0-0x1710)}"/>
+      <S i="10" l="13" v="{[0x1620-0x16b0)}"/>
+      <S i="11" l="14" v="{[0x16b0-0x16e0)}"/>
+      <S i="12" l="15" v="{[0x16e0-0x16f0) [0x1710-0x1750)}"/>
+      <C i="13" l="9" v="{[0x17e0-0x17f0)}" t="0x19b0" d="NVIDIA sm_70"/>
+      <L i="14" l="5" f="/home/kz21/Codes/hpctoolkit-gpu-samples/utils/read_graphviz/data/loop4.cu" v="{[0x1470-0x1471)}">
+        <S i="15" l="5" v="{[0x1470-0x14c0)}"/>
+        <L i="16" l="5" f="/home/kz21/Codes/hpctoolkit-gpu-samples/utils/read_graphviz/data/loop4.cu" v="{[0x15e0-0x15e1)}">
+          <S i="17" l="5" v="{[0x15e0-0x15f0)}"/>
+          <S i="18" l="9" v="{[0x1750-0x17c0) [0x1800-0x19b0)}"/>
+          <S i="19" l="11" v="{[0x15f0-0x1620)}"/>
+          <S i="20" l="12" v="{[0x16f0-0x1710)}"/>
+          <S i="21" l="13" v="{[0x1620-0x16b0)}"/>
+          <S i="22" l="14" v="{[0x16b0-0x16e0)}"/>
+          <S i="23" l="15" v="{[0x16e0-0x16f0) [0x1710-0x1750)}"/>
+        </L>
+      </L>
+    </P>
+    <P i="24" n="$_Z6vecAddPfS_S_m$__cuda_sm20_sqrt_rn_f32_slowpath" l="9" v="{[0x19b0-0x19b1)}">
+      <S i="25" l="9" v="{[0x19b0-0x1b80)}"/>
+    </P>
+  </F>
+</LM>
+</HPCToolkitStructure>
