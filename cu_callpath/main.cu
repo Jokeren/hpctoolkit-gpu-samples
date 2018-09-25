@@ -18,8 +18,8 @@
 
 
 static size_t N = 1000;
-static size_t iter1 = 2;
-static size_t iter2 = 4;
+static size_t iter1 = 200;
+static size_t iter2 = 400;
 
 void init(int *p, size_t size) {
   for (size_t i = 0; i < size; ++i) {
