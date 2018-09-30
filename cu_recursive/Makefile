@@ -22,7 +22,7 @@ endif
 
 showflag =
 oflag = -g
-cuda_arch = sm_60
+cuda_arch = sm_70
 
 CXXFLAGS = -Xcompiler "$(oflag) $(arch) $(mpi) $(showflag) -fopenmp" -lcudart -lcuda $(oflag)
 

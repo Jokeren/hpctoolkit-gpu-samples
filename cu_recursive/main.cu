@@ -58,6 +58,7 @@ int main(int argc, char *argv[]) {
   DRIVER_API_CALL(cuDeviceGet(&device, 0));
   CUcontext context;
   DRIVER_API_CALL(cuCtxCreate(&context, 0, device));
+  DRIVER_API_CALL(cuCtxSetLimit(CU_LIMIT_STACK_SIZE, 65536));
 
   #pragma omp parallel
   {
