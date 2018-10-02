@@ -6,15 +6,7 @@
 #include <mpi.h>
 #endif
 
-#define DRIVER_API_CALL(apiFuncCall)                                           \
-  do {                                                                           \
-    CUresult _status = apiFuncCall;                                            \
-    if (_status != CUDA_SUCCESS) {                                             \
-      fprintf(stderr, "%s:%d: error: function %s failed with error %d.\n",   \
-        __FILE__, __LINE__, #apiFuncCall, _status);                    \
-      exit(-1);                                                              \
-    }                                                                          \
-  } while (0)
+#include "../utils/common.h"
 
 
 static size_t N = 1000;
@@ -54,11 +46,13 @@ int main(int argc, char *argv[]) {
   printf("MPI task %d/%d\n", rank, numtasks);
 #endif
 
-  cuInit(0);
   CUdevice device;
-  DRIVER_API_CALL(cuDeviceGet(&device, 0));
   CUcontext context;
-  DRIVER_API_CALL(cuCtxCreate(&context, 0, device));
+  int device_id = 0;
+  if (argc > 1) {
+    device_id = atoi(argv[1]);
+  }
+  init_device(device_id, device, context);
 
   #pragma omp parallel
   {

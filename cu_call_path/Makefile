@@ -1,44 +1,38 @@
-SHELL = /bin/sh
+CONFIGS := Makefile.config
 
-EXEC = main
+include $(CONFIGS)
 
-CUBIN = vecAdd
+EXEC := main
 
-CXX = nvcc
+CUBIN := vecAdd
 
-USE_MPI =
-mpi =
-# Tuning flags for MPI
+CXX ?= nvcc
+
+CPU_FLAGS := -g -fopenmp
+
+GPU_FLAGS := -lineinfo -arch $(ARCH)
+
+ifeq ($(CPU_ARCH), power8)
+	CPU_FLAGS += -mcpu=pwr8 -mtune=pwr8
+endif
+
 ifdef USE_MPI
-mpi = -DUSE_MPI=$(USE_MPI)
+	CPU_FLAGS += -DUSE_MPI
 endif
 
-USE_POWER =
-arch = 
-# Tuning flags for Power 8
-ifdef USE_POWER
-archflag ?= -mcpu=pwr8 -mtune=pwr8 
-endif
-
-showflag =
-oflag = -g
-cuda_arch = sm_70
-
-CXXFLAGS = -Xcompiler "$(oflag) $(arch) $(mpi) $(showflag) -fopenmp" -lcudart -lcuda $(oflag)
+CXXFLAGS := -Xcompiler "$(CPU_FLAGS)" $(GPU_FLAGS)
 
 all: exec cubin
 	
 exec: $(EXEC)
 
 $(EXEC): % : %.cu
-	$(CXX) $(LDFLAGS) -lstdc++ -lm -o $@ $< $(showflag) $(CXXFLAGS)
+	$(CXX) $(LDFLAGS) -o $@ $< $(SHOW_FLAG) $(CXXFLAGS) -lcudart -lcuda -lstdc++ -lm
 
 cubin: $(CUBIN)
 
 $(CUBIN): % : %.cu
-	$(CXX) -arch $(cuda_arch) -cubin $< -lineinfo 
+	$(CXX) $(GPU_FLAGS) -cubin $<
 
 clean:
-	/bin/rm -f *.o *~ *.tgt* $(EXEC)
-	/bin/rm -rf *.dSYM
-	/bin/rm -rf tmp *.dot *.hpcstruct *.cubin
+	rm -rf tmp $(EXEC) *.o *.dot *.hpcstruct *.cubin
