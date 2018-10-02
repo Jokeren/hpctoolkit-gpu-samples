@@ -20,9 +20,8 @@ Test cases to validate the correctness of hpctoolkit for GPU-accelerated applica
 |**Case**                         |**Purpose**                      |
 |-----------------------------|-----------------------------|
 |*cuda_vec_add* | *cudaLaunchKernel*|
-|*cuda_dynamic* | *cudaLaunchCooperativeKernel* |
+|*cuda_dynamic* | *cudaLaunchKernel* on device side |
 |*cu_vec_add* | *cuLaunchKernel*|
-|*cu_dynamic* | *cuLaunchCooperativeKernel*|
 |*cu_multi_entries* | *cuLaunchKernel* for difference kernels with the same calling context |
 |*target_vec_add* | *omp target* |
 
@@ -32,7 +31,7 @@ Test cases to validate the correctness of hpctoolkit for GPU-accelerated applica
 |-----------------------------|-----------------------------|
 |*cu_call_path* | acyclic call graph |
 |*cu_call_path_recursive* | recursive device function calls |
-|*cu_dynamic_recursive* | recursive call with dynamic parallelism |
+|*cu_call_path_dynamic_recursive* | recursive call with dynamic parallelism |
 
 ## Bug Reports
 
