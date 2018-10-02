@@ -6,7 +6,11 @@
 #include <mpi.h>
 #endif
 
+#include "../utils/common.h"
+
+
 static const size_t N = 1000;
+
 
 void init(int *p, size_t size) {
   for (size_t i = 0; i < size; ++i) {
@@ -14,11 +18,13 @@ void init(int *p, size_t size) {
   }
 }
 
+
 void output(int *p, size_t size) {
   for (size_t i = 0; i < size; ++i) {
     printf("index %zu: %d\n", i, p[i]);
   }
 }
+
 
 __global__
 void vecAdd(int *l, int *r, int *p, size_t N) {
@@ -28,31 +34,8 @@ void vecAdd(int *l, int *r, int *p, size_t N) {
   }
 }
 
+
 int main(int argc, char *argv[]) {
-  int l1[N], l2[N];
-  int r1[N], r2[N];
-  int p1[N], p2[N];
-  int *dl1, *dl2;
-  int *dr1, *dr2;
-  int *dp1, *dp2;
-
-  init(l1, N);
-  init(r1, N);
-  init(l2, N);
-  init(r2, N);
-
-  cudaMalloc(&dl1, N * sizeof(int));
-  cudaMalloc(&dl2, N * sizeof(int));
-  cudaMalloc(&dr1, N * sizeof(int));
-  cudaMalloc(&dr2, N * sizeof(int));
-  cudaMalloc(&dp1, N * sizeof(int));
-  cudaMalloc(&dp2, N * sizeof(int));
-
-  cudaMemcpy(dl1, l1, N * sizeof(int), cudaMemcpyHostToDevice);
-  cudaMemcpy(dl2, l2, N * sizeof(int), cudaMemcpyHostToDevice);
-  cudaMemcpy(dr1, r1, N * sizeof(int), cudaMemcpyHostToDevice);
-  cudaMemcpy(dr2, r2, N * sizeof(int), cudaMemcpyHostToDevice);
-
 #ifdef USE_MPI
   int numtasks, rank;
   MPI_Init(&argc, &argv);
@@ -61,31 +44,48 @@ int main(int argc, char *argv[]) {
   printf("MPI task %d/%d\n", rank, numtasks);
 #endif
 
+  // Init device
+  int device_id = 0;
+  if (argc > 1) {
+    device_id = atoi(argv[1]);
+  }
+  cuda_init_device(device_id);
+
   #pragma omp parallel
   {
+    int l[N], r[N], p[N];
+    int *dl, *dr, *dp;
+
+    init(l, N);
+    init(r, N);
+
+    RUNTIME_API_CALL(cudaMalloc(&dl, N * sizeof(int)));
+    RUNTIME_API_CALL(cudaMalloc(&dr, N * sizeof(int)));
+    RUNTIME_API_CALL(cudaMalloc(&dp, N * sizeof(int)));
+
+    RUNTIME_API_CALL(cudaMemcpy(dl, l, N * sizeof(int), cudaMemcpyHostToDevice));
+    RUNTIME_API_CALL(cudaMemcpy(dr, r, N * sizeof(int), cudaMemcpyHostToDevice));
+
     size_t threads = 256;
     size_t blocks = (N - 1) / threads + 1;
-    if (omp_get_thread_num() == 0) {
-      vecAdd<<<blocks, threads>>>(dl1, dr1, dp1, N); 
-    } else if (omp_get_thread_num() == 1) {
-      vecAdd<<<blocks, threads>>>(dl2, dr2, dp2, N); 
+
+    GPU_TEST_FOR((vecAdd<<<blocks, threads>>>(dl, dr, dp, N)));
+
+    RUNTIME_API_CALL(cudaMemcpy(p, dp, N * sizeof(int), cudaMemcpyDeviceToHost));
+
+    RUNTIME_API_CALL(cudaFree(dl));
+    RUNTIME_API_CALL(cudaFree(dr));
+    RUNTIME_API_CALL(cudaFree(dp));
+
+    #pragma omp critical
+    {
+      printf("Thread %d\n", omp_get_thread_num());
+      output(p, N);
     }
   }
 
-  cudaMemcpy(p1, dp1, N * sizeof(int), cudaMemcpyDeviceToHost);
-  cudaMemcpy(p2, dp2, N * sizeof(int), cudaMemcpyDeviceToHost);
-
   cudaDeviceSynchronize();
 
-  output(p1, N);
-  output(p2, N);
-
-  cudaFree(dl1);
-  cudaFree(dl2);
-  cudaFree(dr1);
-  cudaFree(dr2);
-  cudaFree(dp1);
-  cudaFree(dp2);
 #ifdef USE_MPI
   MPI_Finalize();
 #endif

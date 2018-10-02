@@ -7,11 +7,14 @@ int __attribute__ ((noinline)) add(int *l, int *r, int i, int N) {
   }
 }
 
+
 extern "C"
 __global__
 void vecAdd(int *l, int *r, int *p, size_t N, size_t iter) {
   size_t idx = blockDim.x * blockIdx.x + threadIdx.x;
   for (size_t i = 0; i < iter; ++i) {
-    p[idx] = add(l, r, idx, N);
+    if (idx < N) {
+      p[idx] = add(l, r, idx, N);
+    }
   }
 }

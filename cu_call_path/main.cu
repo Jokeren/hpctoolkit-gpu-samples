@@ -13,17 +13,20 @@ static size_t N = 1000;
 static size_t iter1 = 200;
 static size_t iter2 = 400;
 
+
 void init(int *p, size_t size) {
   for (size_t i = 0; i < size; ++i) {
     p[i] = i;
   }
 }
 
+
 void output(int *p, size_t size) {
   for (size_t i = 0; i < size; ++i) {
     printf("index %zu: %d\n", i, p[i]);
   }
 }
+
 
 int main(int argc, char *argv[]) {
 #ifdef USE_MPI
@@ -41,7 +44,7 @@ int main(int argc, char *argv[]) {
   if (argc > 1) {
     device_id = atoi(argv[1]);
   }
-  init_device(device_id, device, context);
+  cu_init_device(device_id, device, context);
 
   #pragma omp parallel
   {
@@ -89,7 +92,7 @@ int main(int argc, char *argv[]) {
     }
   }
 
-  cudaDeviceSynchronize();
+  RUNTIME_API_CALL(cudaDeviceSynchronize());
   DRIVER_API_CALL(cuCtxSynchronize());
   DRIVER_API_CALL(cuCtxDestroy(context));
 

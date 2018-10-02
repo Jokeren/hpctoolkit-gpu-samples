@@ -40,7 +40,7 @@
   } while (0)
 
 
-static inline void init_device(int device_num, CUdevice &device, CUcontext &context) {
+static inline void cu_init_device(int device_num, CUdevice &device, CUcontext &context) {
   static int const LEN = 32;
   char device_name[LEN];
 
@@ -51,6 +51,12 @@ static inline void init_device(int device_num, CUdevice &device, CUcontext &cont
 
   DRIVER_API_CALL(cuCtxCreate(&context, 0, device));
   DRIVER_API_CALL(cuCtxSetCurrent(context));
+}
+
+
+static inline void cuda_init_device(int device_num) {
+  RUNTIME_API_CALL(cudaDeviceReset());
+  RUNTIME_API_CALL(cudaSetDevice(device_num));
 }
 
 

@@ -1,38 +1,38 @@
+CONFIGS := Makefile.config
 
-SHELL = /bin/sh
-.SUFFIXES: .cc .o
+include $(CONFIGS)
 
-EXEC = main
+EXEC := main
 
-CUDA ?= /sw/summitdev/cuda/9.0.69
+CUBIN :=
 
-CXX = nvcc
+CXX ?= nvcc
 
-SOURCES = \
-	main.cu
+CPU_FLAGS := -g -fopenmp
 
-OBJECTS = $(SOURCES:.cc=.o)
+GPU_FLAGS := -lineinfo -arch $(ARCH)
 
-USE_MPI =
-mpi =
-ifdef USE_MPI
-mpi = -DUSE_MPI=$(USE_MPI)
+ifeq ($(CPU_ARCH), power8)
+	CPU_FLAGS += -mcpu=pwr8 -mtune=pwr8
 endif
 
-showflag =
-oflag = -g
-archflag ?= -mcpu=pwr8 -mtune=pwr8 
+ifdef USE_MPI
+	CPU_FLAGS += -DUSE_MPI
+endif
 
-# Tuning flags for Power 8
-CXXFLAGS = -Xcompiler "$(oflag) $(shared) $(mpi) $(showflag) -fopenmp" -lcudart -lcuda -G
+CXXFLAGS := -Xcompiler "$(CPU_FLAGS)" $(GPU_FLAGS)
 
-all: $(EXEC)
+all: exec cubin
+	
+exec: $(EXEC)
 
-main: $(OBJECTS)
-	@echo "Linking"
-	$(CXX) $(OBJECTS) $(LDFLAGS) -lstdc++ -lm -o $@ $(showflag) $(CXXFLAGS)
+$(EXEC): % : %.cu
+	$(CXX) $(LDFLAGS) -o $@ $< $(SHOW_FLAG) $(CXXFLAGS) -lcudart -lcuda -lstdc++ -lm
+
+cubin: $(CUBIN)
+
+$(CUBIN): % : %.cu
+	$(CXX) $(GPU_FLAGS) -cubin $<
 
 clean:
-	/bin/rm -f *.o *~ *.tgt* $(EXEC)
-	/bin/rm -rf *.dSYM
-	/bin/rm -rf *.hpcstruct
+	rm -rf tmp $(EXEC) *.o *.dot *.hpcstruct *.cubin

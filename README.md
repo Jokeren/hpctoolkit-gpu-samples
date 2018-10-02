@@ -9,7 +9,7 @@ Test cases to validate the correctness of hpctoolkit for GPU-accelerated applica
     export OMP_NUM_THREADS = <#threads>
     export HPCTOOLKIT_GPU_TEST_REP = <#repeat times>
 
-**Run** (except applications)
+**Run**
 
     cd <sample path>
     make ARCH=<GPU arch>

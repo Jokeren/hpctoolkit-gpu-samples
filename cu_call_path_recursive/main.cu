@@ -9,8 +9,8 @@
 #include "../utils/common.h"
 
 
-static size_t N = 1000;
-static size_t iter = 200;
+static size_t N = 20;
+static size_t iter = 100;
 
 
 void init(int *p, size_t size) {
@@ -63,13 +63,6 @@ int main(int argc, char *argv[]) {
     DRIVER_API_CALL(cuModuleLoad(&moduleAdd, "vecAdd.cubin"));
     DRIVER_API_CALL(cuModuleGetFunction(&vecAdd, moduleAdd, "vecAdd"));
 
-    CUmodule moduleSub;
-    CUfunction vecSub;
-    DRIVER_API_CALL(cuModuleLoad(&moduleSub, "vecSub.cubin"));
-    DRIVER_API_CALL(cuModuleGetFunction(&vecSub, moduleSub, "vecSub"));
-
-    CUfunction funcs[] = {vecAdd, vecSub};
-
     DRIVER_API_CALL(cuMemAlloc(&dl, N * sizeof(int)));
     DRIVER_API_CALL(cuMemAlloc(&dr, N * sizeof(int)));
     DRIVER_API_CALL(cuMemAlloc(&dp, N * sizeof(int)));
@@ -80,7 +73,7 @@ int main(int argc, char *argv[]) {
       &dl, &dr, &dp, &N, &iter
     };
 
-    GPU_TEST_FOR(DRIVER_API_CALL(cuLaunchKernel(funcs[i % 2], blocks, 1, 1, threads, 1, 1, 0, 0, args, 0)));
+    GPU_TEST_FOR(DRIVER_API_CALL(cuLaunchKernel(vecAdd, blocks, 1, 1, threads, 1, 1, 0, 0, args, 0)));
 
     DRIVER_API_CALL(cuMemcpyDtoH(l, dl, N * sizeof(int))); 
     DRIVER_API_CALL(cuMemcpyDtoH(r, dr, N * sizeof(int))); 
