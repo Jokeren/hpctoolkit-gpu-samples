@@ -76,7 +76,7 @@ int main(int argc, char *argv[]) {
         &dl1, &dr1, &dp1, &N, &iter1, &iter2
       };
 
-      DRIVER_API_CALL(cuLaunchKernel(vecAdd, blocks, 1, 1, threads, 1, 1, 0, 0, args, 0));
+      GPU_TEST_FOR(DRIVER_API_CALL(cuLaunchKernel(vecAdd, blocks, 1, 1, threads, 1, 1, 0, 0, args, 0)));
 
       DRIVER_API_CALL(cuMemcpyDtoH(l1, dl1, N * sizeof(int))); 
       DRIVER_API_CALL(cuMemcpyDtoH(r1, dr1, N * sizeof(int))); 
@@ -95,7 +95,7 @@ int main(int argc, char *argv[]) {
         &dl2, &dr2, &dp2, &N, &iter1, &iter2
       };
 
-      DRIVER_API_CALL(cuLaunchKernel(vecAdd, blocks, 1, 1, threads, 1, 1, 0, 0, args, 0));
+      GPU_TEST_FOR(DRIVER_API_CALL(cuLaunchKernel(vecAdd, blocks, 1, 1, threads, 1, 1, 0, 0, args, 0)));
 
       DRIVER_API_CALL(cuMemcpyDtoH(l2, dl2, N * sizeof(int))); 
       DRIVER_API_CALL(cuMemcpyDtoH(r2, dr2, N * sizeof(int))); 
