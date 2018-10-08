@@ -20,8 +20,10 @@ Test cases to validate the correctness of hpctoolkit for GPU-accelerated applica
 |**Case**                         |**Purpose**                      |
 |-----------------------------|-----------------------------|
 |*cuda_vec_add* | *cudaLaunchKernel*|
+|*cuda_cooperative_group*| *cudaLaunchCooperativeKernel* |
 |*cu_vec_add* | *cuLaunchKernel*|
 |*cu_multi_entries* | *cuLaunchKernel* for difference kernels with the same calling context |
+|*cu_cooperative_group*| *cuLaunchCooperativeKernel* (ERROR) |
 |*target_vec_add* | *omp target* |
 
 ## Call Trees
