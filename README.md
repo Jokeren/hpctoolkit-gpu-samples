@@ -6,8 +6,8 @@ Test cases to validate the correctness of hpctoolkit for GPU-accelerated applica
 
 **Setup**
 
-    export OMP_NUM_THREADS = <#threads>
-    export HPCTOOLKIT_GPU_TEST_REP = <#repeat times>
+    export OMP_NUM_THREADS=<#threads>
+    export HPCTOOLKIT_GPU_TEST_REP=<#repeat times>
 
 **Run**
 
