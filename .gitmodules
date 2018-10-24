@@ -1,0 +1,3 @@
+[submodule "cupti_test"]
+	path = cupti_test
+	url = git@github.com:Jokeren/cupti_test.git
