@@ -40,8 +40,9 @@ Test cases to validate the correctness of hpctoolkit for GPU-accelerated applica
 
 |**Case**                         |**Purpose**                      |
 |-----------------------------|-----------------------------|
-|*nvdisasm* | unable to parse warp sychronization instructions |
-|*cuobjdump* | incorrect ordering of dual-issued instructions |
+|*nvdisasm* | nvdisasm correctness check samples |
+|*cuobjdump* | cuobjdump correctness check samples |
+|*cupti_test* | cupti\_test correctness check samples |
 
 ## Applications
 
