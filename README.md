@@ -32,6 +32,7 @@ Test cases to validate the correctness of hpctoolkit for GPU-accelerated applica
 |-----------------------------|-----------------------------|
 |*cu_call_path* | acyclic call graph |
 |*cu_call_path_recursive* | recursive device function calls |
+|*cu_call_path_recursive_mutual* | mutual recursive device function calls |
 |*cuda_call_path_dynamic* | dynamic parallelism |
 |*cuda_call_path_dynamic_recursive* | recursive call with dynamic parallelism |
 
