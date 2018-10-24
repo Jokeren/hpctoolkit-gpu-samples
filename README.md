@@ -4,6 +4,10 @@ Test cases to validate the correctness of hpctoolkit for GPU-accelerated applica
 
 ## Usage
 
+**Clone**
+
+    git clone --recursive git@github.com:Jokeren/hpctoolkit-gpu-samples.git
+
 **Setup**
 
     export OMP_NUM_THREADS=<#threads>
