@@ -26,7 +26,7 @@
     "vecAdd":exit4:e -> ".L_4":entry:n [style=solid];
     "vecAdd":exit5:e -> ".L_4":entry:n [style=solid];
     
-For instance, in the above block, `exit0-5` labels are missing in the instructions (label).
+For instance, in the above block, `exit0-5` labels are missing in the instructions.
 
 ### Usage
 
