@@ -30,5 +30,7 @@ For instance, in the above block, `exit0-5` labels are missing in the instructio
 
 ### Usage
 
+    git clone --recursive https://github.com/Jokeren/hpctoolkit-gpu-samples
+    cd nvdisasm_test/cfg
     ./run.sh
     check sm_60_cuda_10.0.dot and sm_60_cuda_9.2.dot
