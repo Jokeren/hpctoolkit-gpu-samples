@@ -1,3 +1,9 @@
 [submodule "cupti_test"]
 	path = cupti_test
 	url = git@github.com:Jokeren/cupti_test.git
+[submodule "sw4"]
+	path = sw4
+	url = git@github.com:Jokeren/sw4.git
+[submodule "RAJAPerf"]
+	path = RAJAPerf
+	url = git@github.com:Jokeren/RAJAPerf.git

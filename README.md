@@ -53,6 +53,6 @@ Test cases to validate the correctness of hpctoolkit for GPU-accelerated applica
 |**Case**                         |**Purpose**                      | **URL** |
 |-----------------------------|-----------------------------|----|
 |*target_lulesh* | *omp target* performance |https://computation.llnl.gov/projects/co-design/lulesh|
-|*rajaperf* | *cuda* and *raja* perforance |https://github.com/LLNL/RAJAPerf|
+|*RAJAPerf* | *cuda* and *raja* perforance |https://github.com/LLNL/RAJAPerf|
 |*sw4* | realworld application with complex call trees |https://github.com/geodynamics/sw4|
 
