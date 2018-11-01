@@ -6,7 +6,7 @@ Test cases to validate the correctness of hpctoolkit for GPU-accelerated applica
 
 **Clone**
 
-    git clone --recursive git@github.com:Jokeren/hpctoolkit-gpu-samples.git
+    git clone --recursive https://github.com/Jokeren/hpctoolkit-gpu-samples
 
 **Setup**
 
