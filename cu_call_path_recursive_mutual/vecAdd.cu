@@ -2,6 +2,7 @@ __device__ int add_proxy(int *l, int *r, int i, int N);
 __device__ int mul_proxy1(int *l, int *r, int i, int N);
 __device__ int mul_proxy2(int *l, int *r, int i, int N);
 
+
 __device__
 int __attribute__ ((noinline)) add(int *l, int *r, int i, int N) {
   if (i < N) {
@@ -26,6 +27,7 @@ int __attribute__ ((noinline)) mul_proxy1(int *l, int *r, int i, int N) {
     return l[0] * r[0];
   }
 }
+
 
 __device__
 int __attribute__ ((noinline)) mul_proxy2(int *l, int *r, int i, int N) {
