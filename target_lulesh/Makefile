@@ -45,8 +45,8 @@ endif
 
 showflag =
 oflag = -g
-archflag =
-PTX = -Xcuda-ptxas "-maxrregcount=64"
+archflag = -mcpu=pwr8 -mtune=pwr8
+PTX =
 
 # Tuning flags for Power 8
 CXXFLAGS = $(archflag) -fopenmp=libomp $(oflag) -fopenmp-targets=nvptx64-nvidia-cuda $(shared) $(mpi) $(teams) $(threads) $(gpu) $(showflag) $(PTX)
