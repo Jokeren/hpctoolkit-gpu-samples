@@ -8,5 +8,3 @@
 # End LSF directives and begin shell commands
 
 date
-export OMP_NUM_THREADS=2
-jsrun -n 1 -a 1 -g 1 ./lulesh2.0 -i 10

@@ -1,0 +1,11 @@
+#!/bin/bash
+# Begin LSF directives
+#BSUB -P CSC322
+#BSUB -J vec_add
+#BSUB -o vec_add.log%J
+#BSUB -W 1:00
+#BSUB -nnodes 2
+# End LSF directives and begin shell commands
+
+date
+jsrun -n 8 -a 1 -g 1 hpcrun -e nvidia-ompt ./main -i 10
