@@ -8,4 +8,4 @@
 # End LSF directives and begin shell commands
 
 date
-jsrun -n 8 -a 1 -g 1 hpcrun -e nvidia-ompt ./main -i 10
+jsrun -n 8 -a 1 -g 1 hpcrun -e nvidia-ompt ./main
