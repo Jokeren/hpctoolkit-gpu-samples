@@ -10,5 +10,4 @@
 date
 ulimit -c unlimited
 export OMP_NUM_THREADS=2
-export HPCRUN_ABORT_TIMEOUT=30
-jsrun -n 1 -a 1 -g 1 hpcrun -e nvidia-ompt ./main
+jsrun -n 1 -a 1 -g 1 hpcrun -t -e nvidia-ompt -e REALTIME ./main

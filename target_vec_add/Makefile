@@ -4,7 +4,7 @@ SHELL = /bin/sh
 
 EXEC = main
 
-CUDA ?= /sw/summitdev/cuda/9.0.69
+CUDA ?= /sw/summit/cuda/9.2.148
 
 # Point your mpicc to Clang
 CXX = clang
@@ -27,7 +27,7 @@ endif
 USE_GPU = 1
 gpu =
 ifdef USE_GPU
-gpu = -DUSE_GPU=$(USE_GPU)
+gpu = -DUSE_GPU=$(USE_GPU) --cuda-path=$(CUDA)
 endif
 
 USE_MPI =
@@ -38,7 +38,7 @@ endif
 
 showflag =
 oflag = -g
-archflag ?= -mcpu=pwr8 -mtune=pwr8 
+archflag ?= -mcpu=pwr9 -mtune=pwr9
 
 # Tuning flags for Power 8
 CXXFLAGS = $(archflag) -fopenmp=libomp $(oflag) -fopenmp-targets=nvptx64-nvidia-cuda $(shared) $(mpi) $(teams) $(threads) $(gpu) $(showflag)
@@ -47,7 +47,7 @@ LDFLAGS = -L $(CUDA)/nvvm/libdevice
 
 .cc.o:
 	@echo "Building $<"
-	$(CXX) -c $(CXXFLAGS) -o $@  $<
+	$(CXX) --cuda-path=/sw/summit/cuda/9.2.148 -c $(CXXFLAGS) -o $@  $<
 
 all: $(EXEC)
 
