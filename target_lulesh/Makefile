@@ -8,7 +8,7 @@ LULESH_EXEC = lulesh2.0
 
 MPI_INC = /opt/local/include/openmpi
 MPI_LIB = /opt/local/lib
-CUDA ?= /sw/summitdev/cuda/9.0.69
+CUDA ?= /sw/summit/cuda/9.2.148
 
 # Point your mpicc to Clang
 CXX = clang
@@ -45,7 +45,7 @@ endif
 
 showflag =
 oflag = -g
-archflag = -mcpu=pwr8 -mtune=pwr8
+archflag ?= -mcpu=pwr9 -mtune=pwr9
 PTX =
 
 # Tuning flags for Power 8
