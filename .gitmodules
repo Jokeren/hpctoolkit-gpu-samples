@@ -7,6 +7,3 @@
 [submodule "RAJAPerf"]
 	path = RAJAPerf
 	url = git@github.com:Jokeren/RAJAPerf.git
-[submodule "Laghos"]
-	path = Laghos
-	url = https://github.com/CEED/Laghos
