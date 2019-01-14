@@ -65,7 +65,7 @@ lulesh2.0: $(OBJECTS2.0)
 
 clean:
 	/bin/rm -f *.o *~ *.tgt* $(OBJECTS) $(LULESH_EXEC)
-	/bin/rm -rf *.dSYM
+	/bin/rm -rf *.dSYM tmp*
 
 tar: clean
 	cd .. ; tar cvf lulesh-2.0.tar LULESH-2.0 ; mv lulesh-2.0.tar LULESH-2.0

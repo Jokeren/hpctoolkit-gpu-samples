@@ -57,4 +57,4 @@ main: $(OBJECTS)
 
 clean:
 	/bin/rm -f *.o *~ *.tgt* $(OBJECTS) $(EXEC)
-	/bin/rm -rf *.dSYM
+	/bin/rm -rf *.dSYM tmp*

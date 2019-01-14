@@ -1,14 +1,14 @@
 #!/bin/bash
 # Begin LSF directives
 #BSUB -P CSC322
-#BSUB -J vec_add
-#BSUB -o vec_add.log%J
+#BSUB -J lulesh
+#BSUB -o lulesh.log%J
 #BSUB -W 1:00
 #BSUB -nnodes 1
 # End LSF directives and begin shell commands
 
 date
 export OMP_NUM_THREADS=2
-cp ./main $MEMBERWORK/csc322
+cp ./lulesh2.0 $MEMBERWORK/csc322
 cd $MEMBERWORK/csc322
-jsrun -n 1 -a 1 -g 1 hpcrun -t -e nvidia-ompt -e REALTIME ./main
+jsrun -n 1 -a 1 -g 1 hpcrun -e nvidia-ompt ./lulesh2.0 -i 10
