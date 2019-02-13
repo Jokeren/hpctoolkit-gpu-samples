@@ -47,16 +47,19 @@ static inline void cu_init_device(int device_num, CUdevice &device, CUcontext &c
   DRIVER_API_CALL(cuInit(0));
   DRIVER_API_CALL(cuDeviceGet(&device, device_num));
   DRIVER_API_CALL(cuDeviceGetName(device_name, LEN, device));
-  RUNTIME_API_CALL(cudaSetDevice(device_num));
 
-  DRIVER_API_CALL(cuCtxCreate(&context, 0, device));
-  DRIVER_API_CALL(cuCtxSetCurrent(context));
+  DRIVER_API_CALL(cuCtxGetCurrent(&context));
+  if (context == NULL) {
+    DRIVER_API_CALL(cuCtxCreate(&context, 0, device));
+    DRIVER_API_CALL(cuCtxSetCurrent(context));
+  }
 }
 
 
 static inline void cuda_init_device(int device_num) {
-  RUNTIME_API_CALL(cudaDeviceReset());
-  RUNTIME_API_CALL(cudaSetDevice(device_num));
+  CUdevice device;
+  CUcontext context;
+  cu_init_device(device_num, device, context);
 }
 
 
