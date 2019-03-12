@@ -21,7 +21,7 @@ cd ..
 git clone git@github.com:mfem/mfem.git
 cd mfem
 git checkout laghos-v2.0
-make config MFEM_USE_MPI=YES HYPRE_DIR=`pwd`/../hypre-2.11.2/src/hypre MFEM_USE_METIS_5=YES METIS_DIR=`pwd`/../metis-5.1.0
+make config MFEM_DEBUG=YES MFEM_USE_MPI=YES HYPRE_DIR=`pwd`/../hypre-2.11.2/src/hypre MFEM_USE_METIS_5=YES METIS_DIR=`pwd`/../metis-5.1.0
 make status
 make -j8
 cd ..
@@ -59,7 +59,7 @@ cd ..
 
 # CUDA Laghos
 cd Laghos/cuda
-make NV_ARCH=-arch=sm_70 CUDA_DIR=/sw/summit/cuda/9.2.148/ MPI_HOME=$MPI_HOME -j8
+make debug NV_ARCH=-arch=sm_70 CUDA_DIR=/sw/summit/cuda/9.2.148/ MPI_HOME=$MPI_HOME -j8
 cd ../..
 
 # RAJA Laghos
