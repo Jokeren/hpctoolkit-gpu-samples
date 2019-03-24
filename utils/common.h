@@ -57,9 +57,8 @@ static inline void cu_init_device(int device_num, CUdevice &device, CUcontext &c
 
 
 static inline void cuda_init_device(int device_num) {
-  CUdevice device;
-  CUcontext context;
-  cu_init_device(device_num, device, context);
+  RUNTIME_API_CALL(cudaDeviceReset());
+  RUNTIME_API_CALL(cudaSetDevice(device_num));
 }
 
 
