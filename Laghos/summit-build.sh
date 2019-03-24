@@ -1,10 +1,10 @@
-export MPI_HOME=/autofs/nccs-svm1_sw/summit/.swci/1-compute/opt/spack/20180914/linux-rhel7-ppc64le/gcc-6.4.0/spectrum-mpi-10.2.0.10-20181214-o4r7cptz5i4og4c5x6ngsacosjqeo6l7/
+export MPI_HOME=`echo $MPI_ROOT`
 export CPLUS_INCLUDE_PATH=`pwd`/cub-1.8.0:$CPLUS_INCLUDE_PATH
 
 # hypre
 wget https://computation.llnl.gov/projects/hypre-scalable-linear-solvers-multigrid-methods/download/hypre-2.11.2.tar.gz
 tar xzvf hypre-2.11.2.tar.gz
- cd hypre-2.11.2/src
+cd hypre-2.11.2/src
 ./configure --disable-fortran --with-MPI --with-MPI-include=$MPI_HOME/include --with-MPI-lib-dirs=$MPI_HOME/lib
 make -j8
 cd ../..

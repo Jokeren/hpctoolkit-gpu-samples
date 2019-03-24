@@ -10,3 +10,6 @@
 [submodule "tls_test"]
 	path = tls_test
 	url = git@github.com:Jokeren/tls_test.git
+[submodule "Laghos/Laghos"]
+	path = Laghos/Laghos
+	url = git@github.com:Jokeren/Laghos.git
