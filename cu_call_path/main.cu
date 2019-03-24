@@ -37,18 +37,17 @@ int main(int argc, char *argv[]) {
   printf("MPI task %d/%d\n", rank, numtasks);
 #endif
 
+  // Init device
+  CUdevice device;
+  CUcontext context;
   int device_id = 0;
   if (argc > 1) {
     device_id = atoi(argv[1]);
   }
+  cu_init_device(device_id, device, context);
 
   #pragma omp parallel
   {
-    // Init device
-    CUdevice device;
-    CUcontext context;
-    cu_init_device(device_id, device, context);
-
     int l[N], r[N], p[N];
     CUdeviceptr dl, dr, dp;
 
@@ -91,11 +90,10 @@ int main(int argc, char *argv[]) {
       printf("Thread %d\n", omp_get_thread_num());
       output(p, N);
     }
-
-    DRIVER_API_CALL(cuCtxSynchronize());
-    DRIVER_API_CALL(cuCtxDestroy(context));
   }
 
+  DRIVER_API_CALL(cuCtxSynchronize());
+  DRIVER_API_CALL(cuCtxDestroy(context));
   RUNTIME_API_CALL(cudaDeviceSynchronize());
 
 #ifdef USE_MPI
