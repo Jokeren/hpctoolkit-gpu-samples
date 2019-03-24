@@ -38,6 +38,8 @@ int main(int argc, char *argv[]) {
   #pragma omp parallel
   {
     if (omp_get_thread_num() == 0) {
+      #pragma omp target data map(to:l1[0:N], r1[0:N]) map(tofrom: p1[0:N])
+      {
       #pragma omp target
       #pragma omp teams num_teams(4) thread_limit(64)
       {
@@ -46,11 +48,15 @@ int main(int argc, char *argv[]) {
           p1[i] = l1[i] + r1[i];
         }
       }
+      }
     } else if (omp_get_thread_num() == 1) {
+      #pragma omp target data map(to:l2[0:N], r2[0:N]) map(tofrom: p2[0:N])
+      {
       #pragma omp target
       #pragma omp teams distribute parallel for num_teams(4) thread_limit(64)
       for (size_t i = 0; i < N; ++i) {
         p2[i] = l2[i] + r2[i];
+      }
       }
     }
   }
