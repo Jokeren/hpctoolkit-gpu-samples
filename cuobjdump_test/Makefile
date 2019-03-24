@@ -17,4 +17,3 @@ $(CUBIN): % : %.cu
 
 clean:
 	rm $(CUBIN).cubin
-
