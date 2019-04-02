@@ -1,4 +1,6 @@
-export MPI_HOME=`echo $MPI_ROOT`
+# Tested for GCC >= 6.4.0
+export MPI_HOME=`echo $MPI_HOME`
+export CUDA_HOME=`echo $CUDA_HOME`
 export CPLUS_INCLUDE_PATH=`pwd`/cub-1.8.0:$CPLUS_INCLUDE_PATH
 
 # hypre
@@ -21,7 +23,7 @@ cd ..
 git clone git@github.com:mfem/mfem.git
 cd mfem
 git checkout laghos-v2.0
-make config MFEM_DEBUG=YES MFEM_USE_MPI=YES HYPRE_DIR=`pwd`/../hypre-2.11.2/src/hypre MFEM_USE_METIS_5=YES METIS_DIR=`pwd`/../metis-5.1.0
+make config STATIC=NO MFEM_DEBUG=YES MFEM_USE_MPI=YES HYPRE_DIR=`pwd`/../hypre-2.11.2/src/hypre MFEM_USE_METIS_5=YES METIS_DIR=`pwd`/../metis-5.1.0
 make status
 make -j8
 cd ..
@@ -29,24 +31,6 @@ cd ..
 # CUB
 wget https://github.com/NVlabs/cub/archive/cub-v1.8.0.tar.gz
 tar xf v1.8.0.tar.gz
-
-# RAJA
-git clone --recursive https://github.com/llnl/raja.git
-cd raja
-mkdir build
-cd build
-cmake -DCMAKE_INSTALL_PREFIX=../../raja-install -DENABLE_CUDA=ON -DCMAKE_BUILD_TYPE=RelWithDebInfo ../
-make -j8
-cd ../..
-
-# OCCA
-git clone git@github.com:libocca/occa.git
-cd occa
-make -j8
-export PATH+=":${PWD}/bin"
-export LD_LIBRARY_PATH+=":${PWD}/lib"
-cp ../../makefile-occa makefile
-cd ..
 
 # MFEM with OCCA
 git clone git@github.com:mfem/mfem.git mfem-occa
@@ -59,13 +43,5 @@ cd ..
 
 # CUDA Laghos
 cd Laghos/cuda
-make debug NV_ARCH=-arch=sm_70 CUDA_DIR=/sw/summit/cuda/9.2.148/ MPI_HOME=$MPI_HOME -j8
+make debug NV_ARCH=-arch=sm_70 CUDA_DIR=$CUDA_HOME MPI_HOME=$MPI_HOME -j8
 cd ../..
-
-# RAJA Laghos
-cd Laghos/raja
-make NV_ARCH=-arch=sm_70 CUDA_DIR=/sw/summit/cuda/9.2.148/ MPI_HOME=$MPI_HOME RAJA_DIR=`pwd`/../../raja-install -j8
-
-# OCCA Laghos
-cd Laghos/occa
-make -j8
