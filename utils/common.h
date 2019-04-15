@@ -41,12 +41,8 @@
 
 
 static inline void cu_init_device(int device_num, CUdevice &device, CUcontext &context) {
-  static int const LEN = 32;
-  char device_name[LEN];
-
   DRIVER_API_CALL(cuInit(0));
   DRIVER_API_CALL(cuDeviceGet(&device, device_num));
-  DRIVER_API_CALL(cuDeviceGetName(device_name, LEN, device));
 
   DRIVER_API_CALL(cuCtxGetCurrent(&context));
   if (context == NULL) {
