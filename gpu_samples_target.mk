@@ -26,11 +26,10 @@ endif
 OMPFLAG := -fopenmp=libomp -fopenmp-targets=nvptx64-nvidia-cuda
 
 SHOWFLAG +=
-OFLAG += -g -O2
+OFLAG += -g
 ARCHFLAG += 
 PTXFLAG +=
 
-# Tuning flags for Power 8
 CXXFLAGS = $(ARCHFLAG) $(OMPFLAG) $(OFLAG) $(SHOWFLAG) $(PTXFLAG) $(mpi) $(teams) $(threads) $(gpu)
 
 LDFLAGS = -L $(CUDA)/nvvm/libdevice -lomp -lomptarget -lstdc++ -lm
