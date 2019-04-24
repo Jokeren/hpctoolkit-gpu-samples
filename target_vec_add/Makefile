@@ -8,4 +8,6 @@ USE_GPU := 1
 
 ARCHFLAG := -mcpu=pwr9 -mtune=pwr9
 
+SHOWFLAG :=
+
 include $(TEMPLATE)

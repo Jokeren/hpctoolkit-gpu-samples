@@ -2,6 +2,8 @@
 # You might have to change the compiler name and flags.
 CUDA ?= /sw/summit/cuda/9.2.148
 
+OMPLIB ?= /sw/summit/llvm
+
 # Point your mpicc to Clang
 CXX := clang++
 
@@ -31,7 +33,7 @@ PTXFLAG +=
 
 CXXFLAGS = $(ARCHFLAG) $(OMPFLAG) $(OFLAG) $(SHOWFLAG) $(PTXFLAG) $(mpi) $(teams) $(threads) $(gpu)
 
-LDFLAGS = -lomp -lomptarget -L $(CUDA)/nvvm/libdevice -lm
+LDFLAGS = -L$(OMPLIB) -lomp -lomptarget -lm
 
 all: obj exec
 
