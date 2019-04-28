@@ -2,8 +2,6 @@
 # You might have to change the compiler name and flags.
 CUDA ?= /sw/summit/cuda/9.2.148
 
-OMPLIB ?= /sw/summit/llvm
-
 # Point your mpicc to Clang
 CXX := clang++
 
@@ -31,9 +29,9 @@ OMPFLAG += -fopenmp -fopenmp-targets=nvptx64-nvidia-cuda
 ARCHFLAG += 
 PTXFLAG +=
 
-CXXFLAGS = $(ARCHFLAG) $(OMPFLAG) $(OFLAG) $(SHOWFLAG) $(PTXFLAG) $(mpi) $(teams) $(threads) $(gpu)
+CXXFLAGS = $(ARCHFLAG) $(OMPFLAG) $(OFLAG) $(SHOWFLAG) $(PTXFLAG) $(mpi) $(teams) $(threads) $(gpu) -std=c++11
 
-LDFLAGS = -L$(OMPLIB) -lomp -lomptarget -lm
+LDFLAGS += -lomp -lomptarget -lm
 
 all: obj exec
 

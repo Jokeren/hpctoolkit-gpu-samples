@@ -68,8 +68,6 @@ int main(int argc, char *argv[]) {
 #include "opt5.cc"
 #elif defined OPT6
 #include "opt6.cc"
-#elif defined OPT7
-#include "opt7.cc"
 #endif
 
   gettimeofday(&t2, NULL);

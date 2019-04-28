@@ -13,8 +13,8 @@
       } 
     }
 
-    #pragma omp target teams map(error)
-    #pragma omp distribute parallel for reduction(max:error) collapse(2)
+    #pragma omp target teams
+    #pragma omp distribute parallel for collapse(2)
     for (size_t h = 1; h < H - 1; h++) {
       for (size_t w = 1; w < W - 1; w++) {
         A[h * W + w] = A_new[h * W + w];

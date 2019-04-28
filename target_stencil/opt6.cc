@@ -3,7 +3,7 @@
   while (error > T && iter < ITER) {
     error = 0.0;
 
-    #pragma omp target teams map(error) reduction(max:error)
+    #pragma omp target teams map(error)
     #pragma omp distribute
     for (size_t h = 1; h < H - 1; h++) {
       #pragma omp parallel for reduction(max:error)
