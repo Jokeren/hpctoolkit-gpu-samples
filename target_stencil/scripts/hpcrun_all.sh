@@ -2,6 +2,7 @@
 
 for((i=0;i<7;i++))
 do
+  rm -rf hpctoolkit-main-measurements
   ./scripts/hpcrun.sh $i
   hpcstruct hpctoolkit-main-measurements
   hpcstruct main
