@@ -3,7 +3,7 @@
 CUDA ?= /sw/summit/cuda/9.2.148
 
 # Point your mpicc to Clang
-CXX := clang
+CXX := clang++
 
 OBJECTS := $(SOURCES:.cc=.o)
 
@@ -23,17 +23,15 @@ ifneq ($(USE_MPI),)
 mpi = -DUSE_MPI=$(USE_MPI)
 endif
 
-OMPFLAG := -fopenmp=libomp -fopenmp-targets=nvptx64-nvidia-cuda
-
 SHOWFLAG +=
 OFLAG += -g -O2
+OMPFLAG += -fopenmp -fopenmp-targets=nvptx64-nvidia-cuda
 ARCHFLAG += 
 PTXFLAG +=
 
-# Tuning flags for Power 8
-CXXFLAGS = $(ARCHFLAG) $(OMPFLAG) $(OFLAG) $(SHOWFLAG) $(PTXFLAG) $(mpi) $(teams) $(threads) $(gpu)
+CXXFLAGS = $(ARCHFLAG) $(OMPFLAG) $(OFLAG) $(SHOWFLAG) $(PTXFLAG) $(mpi) $(teams) $(threads) $(gpu) -std=c++11
 
-LDFLAGS = -L $(CUDA)/nvvm/libdevice -lomp -lomptarget -lstdc++ -lm
+LDFLAGS += -lomp -lomptarget -lm
 
 all: obj exec
 
