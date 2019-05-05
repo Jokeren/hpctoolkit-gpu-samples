@@ -23,7 +23,7 @@ cd ..
 git clone git@github.com:mfem/mfem.git
 cd mfem
 git checkout laghos-v2.0
-make config STATIC=NO MFEM_DEBUG=YES MFEM_USE_MPI=YES HYPRE_DIR=`pwd`/../hypre-2.11.2/src/hypre MFEM_USE_METIS_5=YES METIS_DIR=`pwd`/../metis-5.1.0
+make config MFEM_DEBUG=YES MFEM_USE_MPI=YES HYPRE_DIR=`pwd`/../hypre-2.11.2/src/hypre MFEM_USE_METIS_5=YES METIS_DIR=`pwd`/../metis-5.1.0
 make status
 make -j8
 cd ..
