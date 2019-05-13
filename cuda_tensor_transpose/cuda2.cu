@@ -2,7 +2,7 @@
 #include <cuda.h>
 
 #define TILE_SIZE 5900
-#define NTHREADS 256
+#define NTHREADS 512
 
 __global__
 void tensor_transpose(int dim_input, int dim_output, int nblocks, int tile_size,
@@ -16,7 +16,7 @@ void tensor_transpose(int dim_input, int dim_output, int nblocks, int tile_size,
   for (int block_idx = blockIdx.x; block_idx < nblocks; block_idx += gridDim.x) {
     int it = block_idx, im = 0, offset1 = 0;
     for (int i = 0; i < dim_input; i++) {
-      im = it * shape_input_r[i];
+      im = it / shape_input[i];
       offset1 += stride_input[i] * (it - im * shape_input[i]);
       it = im;
     }
@@ -31,7 +31,7 @@ void tensor_transpose(int dim_input, int dim_output, int nblocks, int tile_size,
       it = i;
       int offset2 = 0, local_offset = 0;
       for (int j = 0; j < dim_output; j++) {
-        im = it * shape_output_r[j];
+        im = it / shape_output[j];
         int tmp = it - im * shape_output[j];
         offset2 += stride_output_global[j] * tmp;
         local_offset += stride_output_local[j] * tmp;

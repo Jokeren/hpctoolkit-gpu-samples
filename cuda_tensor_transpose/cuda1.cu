@@ -2,7 +2,7 @@
 #include <cuda.h>
 
 #define TILE_SIZE 5900
-#define NTHREADS 512
+#define NTHREADS 256
 
 __global__
 void tensor_transpose(int dim_input, int dim_output, int nblocks, int tile_size,
