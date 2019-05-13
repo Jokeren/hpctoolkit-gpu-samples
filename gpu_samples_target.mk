@@ -1,9 +1,7 @@
 # Default build suggestion of MPI + OPENMP with Clang on IBM (Power 8) + NVIDIA GPU machines.
 # You might have to change the compiler name and flags.
-CUDA ?= /sw/summit/cuda/9.2.148
-
-# Point your mpicc to Clang
-CXX := clang++
+# Point your mpicc to clang or xlc
+CXX ?= clang++
 
 OBJECTS := $(SOURCES:.cc=.o)
 
@@ -24,14 +22,14 @@ mpi = -DUSE_MPI=$(USE_MPI)
 endif
 
 SHOWFLAG +=
-OFLAG += -g -O2
-OMPFLAG += -fopenmp -fopenmp-targets=nvptx64-nvidia-cuda
+OFLAG += -O3
+OMPFLAG +=
 ARCHFLAG += 
 PTXFLAG +=
 
 CXXFLAGS = $(ARCHFLAG) $(OMPFLAG) $(OFLAG) $(SHOWFLAG) $(PTXFLAG) $(mpi) $(teams) $(threads) $(gpu) -std=c++11
 
-LDFLAGS += -lomp -lomptarget -lm
+LDFLAGS +=
 
 all: obj exec
 
@@ -39,7 +37,7 @@ obj: $(OBJECTS)
 
 $(OBJECTS): %.o : %.cc
 	@echo "Building $@"
-	$(CXX) $(CXXFLAGS) --cuda-path=$(CUDA) -o $@ -c $<
+	$(CXX) $(CXXFLAGS) -o $@ -c $<
 
 exec: $(EXEC)
 
