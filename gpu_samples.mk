@@ -2,7 +2,7 @@ CXX ?= nvcc
 
 CPU_FLAGS += -g -fopenmp
 
-GPU_FLAGS += -lineinfo -arch $(ARCH)
+GPU_FLAGS += -O3 -lineinfo -arch $(ARCH) 
 
 CUBIN_FLAGS += -cubin
 
@@ -19,10 +19,10 @@ CUBIN_CUBIN := $(addprefix $(CUBIN), .cubin)
 endif
 
 ifeq ($(CPU_ARCH), power8)
-	CPU_FLAGS += -mcpu=pwr8 -mtune=pwr8
+	CPU_FLAGS += -mcpu=power8 -mtune=power8
 else
 ifeq ($(CPU_ARCH), power9)
-	CPU_FLAGS += -mcpu=pwr9 -mtune=pwr9
+	CPU_FLAGS += -mcpu=power9 -mtune=power9
 endif
 endif
 
@@ -37,7 +37,7 @@ all: exec cubin device
 exec: $(EXEC)
 
 $(EXEC): % : %.cu $(DEVICE_OBJ)
-	$(CXX) -o $@ $^ $(SHOW_FLAG) $(CXXFLAGS) $(LDFLAGS)
+	$(CXX) -o $@ $^ $(SHOWFLAG) $(CXXFLAGS) $(LDFLAGS)
 
 cubin: $(CUBIN_CUBIN)
 
