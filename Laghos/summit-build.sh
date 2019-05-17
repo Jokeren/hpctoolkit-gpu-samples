@@ -41,7 +41,22 @@ make status
 make -j8
 cd ..
 
+# raja
+git clone --recursive https://github.com/llnl/raja.git
+cd raja
+git checkout v0.5.0
+git submodule init && git submodule update
+mkdir build && cd build
+cmake -DENABLE_CUDA=TRUE -DCMAKE_CUDA_COMPILER=nvcc -DCUDA_ARCH=sm_70 -DCMAKE_BUILD_TYPE=RelWithDebInfo -DCMAKE_INSTALL_PREFIX=../../raja-install ..
+make install -j8
+cd ../..
+
 # CUDA Laghos
 cd Laghos/cuda
 make debug NV_ARCH=-arch=sm_70 CUDA_DIR=$CUDA_HOME MPI_HOME=$MPI_HOME -j8
+cd ../..
+
+# raja Laghos
+cd Laghos/raja
+make debug NV_ARCH=-arch=sm_70 CUDA_DIR=$CUDA_HOME MPI_HOME=$MPI_HOME RAJA_DIR=`pwd`/../../raja-install -j8
 cd ../..
