@@ -1,0 +1,11 @@
+#!/bin/bash
+# Begin LSF directives
+#BSUB -J laghos
+#BSUB -o laghos.log%J
+#BSUB -W 1:00
+#BSUB -nnodes 1
+# End LSF directives and begin shell commands
+
+date
+cd ./Laghos/cuda
+time jsrun -n 1 -a 1 -g 1 hpcrun -e nvidia-cuda ./laghos -p 0 -m ../data/square01_quad.mesh -rs 3 -tf 0.75 -pa
