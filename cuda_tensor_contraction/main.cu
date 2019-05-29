@@ -87,7 +87,8 @@ void init(double *u, double *g, double *d, double *dt) {
           size_t offset = k * N * N + j * N + i;
           u[e_offset + offset] = 0.1 * ((i + 1) + (j + 1) + (k + 1)) + (e + 1) * 100;
           for (size_t p = 0; p < 6; ++p) {
-            g[6 * (e_offset + offset) + p] = (p + 1) + (i + 1) + (j + 1) + (k + 1) + (e + 1) * 1000;
+            g[6 * e_offset + p * N * N * N + offset] = (p + 1) + (i + 1) + (j + 1) + (k + 1) + (e + 1) * 1000;
+            //g[6 * (e_offset + offset) + p] = (p + 1) + (i + 1) + (j + 1) + (k + 1) + (e + 1) * 1000;
           }
         }
       }
@@ -113,12 +114,12 @@ void nekbone(double *w, double *u, double *g, const double *d, const double *dt)
     ul[it] = u[e_offset + it];
   }
 
-  __syncthreads();
-
   if (threadIdx.x < d_size) {
     d_s[threadIdx.x] = d[threadIdx.x];
     dt_s[threadIdx.x] = dt[threadIdx.x];
   }
+
+  __syncthreads();
 
   int i, j, k;
   for(int it = threadIdx.x; it < e_size; it += blockDim.x) {
@@ -134,10 +135,20 @@ void nekbone(double *w, double *u, double *g, const double *d, const double *dt)
       ws += dt_s[j * N + n] * ul[N * (n + k * N) + i];
       wt += dt_s[k * N + n] * ul[N * (j + n * N) + i];
     }
-    int g_offset = 6 * (e_offset + it);
-    ur[it] = g[g_offset + 0] * wr + g[g_offset + 1] * ws + g[g_offset + 2] * wt;
-    us[it] = g[g_offset + 1] * wr + g[g_offset + 3] * ws + g[g_offset + 4] * wt;
-    ut[it] = g[g_offset + 2] * wr + g[g_offset + 4] * ws + g[g_offset + 5] * wt;
+    //int g_offset = 6 * (e_offset + it);
+    //ur[it] = g[g_offset + 0] * wr + g[g_offset + 1] * ws + g[g_offset + 2] * wt;
+    //us[it] = g[g_offset + 1] * wr + g[g_offset + 3] * ws + g[g_offset + 4] * wt;
+    //ut[it] = g[g_offset + 2] * wr + g[g_offset + 4] * ws + g[g_offset + 5] * wt;
+
+    double g0 = __ldg(&g[6 * e_offset + 0 * e_size + it]);
+    double g1 = __ldg(&g[6 * e_offset + 1 * e_size + it]);
+    double g2 = __ldg(&g[6 * e_offset + 2 * e_size + it]);
+    double g3 = __ldg(&g[6 * e_offset + 3 * e_size + it]);
+    double g4 = __ldg(&g[6 * e_offset + 4 * e_size + it]);
+    double g5 = __ldg(&g[6 * e_offset + 5 * e_size + it]);
+    ur[it] = g0 * wr + g1 * ws + g2 * wt;
+    us[it] = g1 * wr + g3 * ws + g4 * wt;
+    ut[it] = g2 * wr + g4 * ws + g5 * wt;
   }
 
   __syncthreads();
@@ -229,16 +240,3 @@ int main() {
 
   return 0;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
