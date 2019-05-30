@@ -97,11 +97,12 @@ void init(double *u, double *g, double *d, double *dt) {
 }
 
 
+template<const int M>
 __global__
 void nekbone(double *w, double *u, double *g, const double *d, const double *dt) {
-  const int e_size = N * N * N;
+  const int e_size = M * M * M;
   const int e_offset = e_size * blockIdx.x;
-  const int d_size = N * N;
+  const int d_size = M * M;
 
   __shared__ double ur[1024];
   __shared__ double us[1024];
@@ -123,17 +124,17 @@ void nekbone(double *w, double *u, double *g, const double *d, const double *dt)
 
   int i, j, k;
   for(int it = threadIdx.x; it < e_size; it += blockDim.x) {
-    j = it / N;
-    i = it - j * N;
-    k = j / N;
-    j -= k * N;
+    j = it / M;
+    i = it - j * M;
+    k = j / M;
+    j -= k * M;
     double wr = 0.0;
     double ws = 0.0;
     double wt = 0.0;
-    for (int n = 0; n < N; ++n) {
-      wr += dt_s[i * N + n] * ul[N * (j + k * N) + n];
-      ws += dt_s[j * N + n] * ul[N * (n + k * N) + i];
-      wt += dt_s[k * N + n] * ul[N * (j + n * N) + i];
+    for (int n = 0; n < M; ++n) {
+      wr += dt_s[i * M + n] * ul[M * (j + k * M) + n];
+      ws += dt_s[j * M + n] * ul[M * (n + k * M) + i];
+      wt += dt_s[k * M + n] * ul[M * (j + n * M) + i];
     }
     //int g_offset = 6 * (e_offset + it);
     //ur[it] = g[g_offset + 0] * wr + g[g_offset + 1] * ws + g[g_offset + 2] * wt;
@@ -154,15 +155,15 @@ void nekbone(double *w, double *u, double *g, const double *d, const double *dt)
   __syncthreads();
 
   for(int it = threadIdx.x; it < e_size; it += blockDim.x) {
-    j = it / N;
-    i = it - j * N;
-    k = j / N;
-    j -= k * N;
+    j = it / M;
+    i = it - j * M;
+    k = j / M;
+    j -= k * M;
     double s = 0.0;
-    for(int n = 0; n < N; ++n) {
-      s += d_s[i * N + n] * ur[N * (j + N * k) + n] +
-        d_s[j * N + n] * us[N * (n + N * k) + i] +
-        d_s[k * N + n] * ut[N * (j + N * n) + i];
+    for(int n = 0; n < M; ++n) {
+      s += d_s[i * M + n] * ur[M * (j + M * k) + n] +
+        d_s[j * M + n] * us[M * (n + M * k) + i] +
+        d_s[k * M + n] * ut[M * (j + M * n) + i];
     }
     w[e_offset + it] = s;
   }
@@ -199,7 +200,7 @@ int main() {
 
   cudaEventRecord(event_start);
 
-  nekbone<<<E, B>>>(w_d, u_d, g_d, d_d, dt_d);
+  nekbone<N><<<E, B>>>(w_d, u_d, g_d, d_d, dt_d);
 
   cudaEventRecord(event_end);
   cudaEventSynchronize(event_end);
