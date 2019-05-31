@@ -87,8 +87,15 @@ void init(double *u, double *g, double *d, double *dt) {
           size_t offset = k * N * N + j * N + i;
           u[e_offset + offset] = 0.1 * ((i + 1) + (j + 1) + (k + 1)) + (e + 1) * 100;
           for (size_t p = 0; p < 6; ++p) {
+#ifdef CUDA1
+            g[6 * (e_offset + offset) + p] = (p + 1) + (i + 1) + (j + 1) + (k + 1) + (e + 1) * 1000;
+#elif defined CUDA2
+            g[6 * (e_offset + offset) + p] = (p + 1) + (i + 1) + (j + 1) + (k + 1) + (e + 1) * 1000;
+#elif defined CUDA3
             g[6 * e_offset + p * N * N * N + offset] = (p + 1) + (i + 1) + (j + 1) + (k + 1) + (e + 1) * 1000;
-            //g[6 * (e_offset + offset) + p] = (p + 1) + (i + 1) + (j + 1) + (k + 1) + (e + 1) * 1000;
+#elif defined CUDA4
+            g[6 * e_offset + p * N * N * N + offset] = (p + 1) + (i + 1) + (j + 1) + (k + 1) + (e + 1) * 1000;
+#endif
           }
         }
       }
@@ -96,78 +103,15 @@ void init(double *u, double *g, double *d, double *dt) {
   }
 }
 
-
-template<const int M>
-__global__
-void nekbone(double *w, double *u, double *g, const double *d, const double *dt) {
-  const int e_size = M * M * M;
-  const int e_offset = e_size * blockIdx.x;
-  const int d_size = M * M;
-
-  __shared__ double ur[1024];
-  __shared__ double us[1024];
-  __shared__ double ut[1024];
-  __shared__ double ul[1024];
-  __shared__ double d_s[d_size];
-  __shared__ double dt_s[d_size];
-
-  for (int it = threadIdx.x ; it < e_size; it += blockDim.x) {
-    ul[it] = u[e_offset + it];
-  }
-
-  if (threadIdx.x < d_size) {
-    d_s[threadIdx.x] = d[threadIdx.x];
-    dt_s[threadIdx.x] = dt[threadIdx.x];
-  }
-
-  __syncthreads();
-
-  int i, j, k;
-  for(int it = threadIdx.x; it < e_size; it += blockDim.x) {
-    j = it / M;
-    i = it - j * M;
-    k = j / M;
-    j -= k * M;
-    double wr = 0.0;
-    double ws = 0.0;
-    double wt = 0.0;
-    for (int n = 0; n < M; ++n) {
-      wr += dt_s[i * M + n] * ul[M * (j + k * M) + n];
-      ws += dt_s[j * M + n] * ul[M * (n + k * M) + i];
-      wt += dt_s[k * M + n] * ul[M * (j + n * M) + i];
-    }
-    //int g_offset = 6 * (e_offset + it);
-    //ur[it] = g[g_offset + 0] * wr + g[g_offset + 1] * ws + g[g_offset + 2] * wt;
-    //us[it] = g[g_offset + 1] * wr + g[g_offset + 3] * ws + g[g_offset + 4] * wt;
-    //ut[it] = g[g_offset + 2] * wr + g[g_offset + 4] * ws + g[g_offset + 5] * wt;
-
-    double g0 = __ldg(&g[6 * e_offset + 0 * e_size + it]);
-    double g1 = __ldg(&g[6 * e_offset + 1 * e_size + it]);
-    double g2 = __ldg(&g[6 * e_offset + 2 * e_size + it]);
-    double g3 = __ldg(&g[6 * e_offset + 3 * e_size + it]);
-    double g4 = __ldg(&g[6 * e_offset + 4 * e_size + it]);
-    double g5 = __ldg(&g[6 * e_offset + 5 * e_size + it]);
-    ur[it] = g0 * wr + g1 * ws + g2 * wt;
-    us[it] = g1 * wr + g3 * ws + g4 * wt;
-    ut[it] = g2 * wr + g4 * ws + g5 * wt;
-  }
-
-  __syncthreads();
-
-  for(int it = threadIdx.x; it < e_size; it += blockDim.x) {
-    j = it / M;
-    i = it - j * M;
-    k = j / M;
-    j -= k * M;
-    double s = 0.0;
-    for(int n = 0; n < M; ++n) {
-      s += d_s[i * M + n] * ur[M * (j + M * k) + n] +
-        d_s[j * M + n] * us[M * (n + M * k) + i] +
-        d_s[k * M + n] * ut[M * (j + M * n) + i];
-    }
-    w[e_offset + it] = s;
-  }
-}
+#ifdef CUDA1
+#include "cuda1.cu"
+#elif defined CUDA2
+#include "cuda2.cu"
+#elif defined CUDA3
+#include "cuda3.cu"
+#elif defined CUDA4
+#include "cuda4.cu"
+#endif
 
 
 int main() {
@@ -200,7 +144,15 @@ int main() {
 
   cudaEventRecord(event_start);
 
-  nekbone<N><<<E, B>>>(w_d, u_d, g_d, d_d, dt_d);
+#ifdef CUDA1
+  nekbone<<<E, B>>>(w_d, u_d, g_d, d_d, dt_d, N);
+#elif defined CUDA2
+  nekbone<<<E, B>>>(w_d, u_d, g_d, d_d, N);
+#elif defined CUDA3
+  nekbone<<<E, B>>>(w_d, u_d, g_d, d_d, N);
+#elif defined CUDA4
+  nekbone<N><<<E, B>>>(w_d, u_d, g_d, d_d);
+#endif
 
   cudaEventRecord(event_end);
   cudaEventSynchronize(event_end);
