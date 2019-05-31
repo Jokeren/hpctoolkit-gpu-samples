@@ -48,11 +48,21 @@ Test cases to validate the correctness of hpctoolkit for GPU-accelerated applica
 |*cuobjdump* | cuobjdump correctness check samples |
 |*cupti_test* | cupti\_test correctness check samples |
 
+## Verification
+
+|**Case**                         |**Purpose**                      |
+|-----------------------------|-----------------------------|
+|*cuda_pc_sampling_tuning* | pc sampling is performed on all SMs independently |
+|*cuda_shared_memory_stall* | no stall reason indicates shared memory latency |
+
 ## Applications
 
 |**Case**                         |**Purpose**                      | **URL** |
 |-----------------------------|-----------------------------|----|
-|*target_lulesh* | *omp target* performance |https://computation.llnl.gov/projects/co-design/lulesh|
-|*RAJAPerf* | *cuda* and *raja* perforance |https://github.com/LLNL/RAJAPerf|
-|*sw4* | realworld application with complex call trees |https://github.com/geodynamics/sw4|
-
+|*Laghos*| large-scale application; *RAJA* and *CUDA* programming model comparison |https://github.com/CEED/Laghos|
+|*target_lulesh* | *OMP Target* performance |https://computation.llnl.gov/projects/co-design/lulesh|
+|*RAJAPerf* | *CUDA* and *RAJA* performance test suite |https://github.com/LLNL/RAJAPerf|
+|*sw4* | 3-D seismic modeling |https://github.com/geodynamics/sw4|
+|*cuda_tensor_contraction*| nekbone | https://nek5000.mcs.anl.gov/|
+|*cuda_tensor_transpose*| ExaTENSOR | https://iadac.github.io/projects/|
+|*target_tensor_transpose*| *OMP Target* version of ExaTENSOR | https://iadac.github.io/projects/|
