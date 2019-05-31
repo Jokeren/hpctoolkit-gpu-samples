@@ -2,6 +2,6 @@
 
 N=$1
 make clean
-make SHOWFLAG="-DOPT"$N
+make SHOWFLAGS="-DOPT"$N
 echo "OPT"$N
 ./main

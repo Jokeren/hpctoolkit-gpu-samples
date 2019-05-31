@@ -6,9 +6,9 @@ SOURCES := main.cc
 
 USE_GPU := 1
 
-SHOWFLAG :=
+SHOWFLAGS :=
 
-OMPFLAG := -g1 -qsmp=omp -qoffload
+OMPFLAGS := -g1 -qsmp=omp -qoffload
 
 CXX := xlc++
 

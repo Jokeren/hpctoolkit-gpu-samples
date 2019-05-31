@@ -13,9 +13,9 @@ USE_GPU := 1
 
 USE_MPI := 0
 
-ARCHFLAG := -mcpu=pwr9 -mtune=pwr9
+ARCHFLAGS := -mcpu=pwr9 -mtune=pwr9
 
-OMPFLAG := -fopenmp -fopenmp-targets=nvptx64-nvidia-cuda
+OMPFLAGS := -fopenmp -fopenmp-targets=nvptx64-nvidia-cuda
 
 CXX := clang++
 

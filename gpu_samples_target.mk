@@ -21,13 +21,13 @@ ifneq ($(USE_MPI),)
 mpi = -DUSE_MPI=$(USE_MPI)
 endif
 
-SHOWFLAG +=
-OFLAG += -O3
-OMPFLAG +=
-ARCHFLAG += 
-PTXFLAG +=
+SHOWFLAGS +=
+OFLAGS += -O3
+OMPFLAGS +=
+ARCHFLAGS += 
+PTXFLAGS +=
 
-CXXFLAGS = $(ARCHFLAG) $(OMPFLAG) $(OFLAG) $(SHOWFLAG) $(PTXFLAG) $(mpi) $(teams) $(threads) $(gpu) -std=c++11
+CXXFLAGS = $(ARCHFLAGS) $(OMPFLAGS) $(OFLAGS) $(SHOWFLAGS) $(PTXFLAGS) $(mpi) $(teams) $(threads) $(gpu) -std=c++11
 
 LDFLAGS +=
 
@@ -43,7 +43,7 @@ exec: $(EXEC)
 
 $(EXEC): $(OBJECTS)
 	@echo "Linking $@"
-	$(CXX) $(OMPFLAG) $(LDFLAGS) -o $@ $^ $(SHOWFLAG)
+	$(CXX) $(OMPFLAGS) $(LDFLAGS) -o $@ $^ $(SHOWFLAGS)
 
 clean:
 	/bin/rm -f *.o *~ *.tgt* *.hpcstruct* $(OBJECTS) $(EXEC)

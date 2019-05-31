@@ -6,11 +6,11 @@ SOURCES := main.cc
 
 USE_GPU := 1
 
-ARCHFLAG := -mcpu=pwr9 -mtune=pwr9
+ARCHFLAGS := -mcpu=pwr9 -mtune=pwr9
 
-OMPFLAG := -fopenmp -fopenmp-targets=nvptx64-nvidia-cuda
+OMPFLAGS := -fopenmp -fopenmp-targets=nvptx64-nvidia-cuda
 
-SHOWFLAG :=
+SHOWFLAGS :=
 
 CXX := clang++
 
