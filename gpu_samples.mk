@@ -37,7 +37,7 @@ all: exec cubin device
 exec: $(EXEC)
 
 $(EXEC): % : %.cu $(DEVICE_OBJ)
-	$(CXX) -o $@ $^ $(SHOWFLAG) $(CXXFLAGS) $(LDFLAGS)
+	$(CXX) -o $@ $^ $(SHOWFLAGS) $(CXXFLAGS) $(LDFLAGS)
 
 cubin: $(CUBIN_CUBIN)
 
