@@ -144,6 +144,8 @@ int main() {
 
   cudaEventRecord(event_start);
 
+  const float RN = 1.0 / N;
+
 #ifdef CUDA1
   nekbone<<<E, B>>>(w_d, u_d, g_d, d_d, dt_d, N);
 #elif defined CUDA2
@@ -151,7 +153,7 @@ int main() {
 #elif defined CUDA3
   nekbone<<<E, B>>>(w_d, u_d, g_d, d_d, N);
 #elif defined CUDA4
-  nekbone<N><<<E, B>>>(w_d, u_d, g_d, d_d);
+  nekbone<<<E, B>>>(w_d, u_d, g_d, d_d, N, RN);
 #endif
 
   cudaEventRecord(event_end);

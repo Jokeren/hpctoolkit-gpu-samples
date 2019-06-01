@@ -1,6 +1,5 @@
-template<const int N>
 __global__
-void nekbone(double *w, const double *u, const double *g, const double *d) {
+void nekbone(double *w, const double *u, const double *g, const double *d, const int N, const float RN) {
   const int e_size = N * N * N;
   const int e_offset = e_size * blockIdx.x;
 
@@ -28,9 +27,9 @@ void nekbone(double *w, const double *u, const double *g, const double *d) {
     double g3 = __ldg(&g[6 * e_offset + 3 * e_size + it]);
     double g4 = __ldg(&g[6 * e_offset + 4 * e_size + it]);
     double g5 = __ldg(&g[6 * e_offset + 5 * e_size + it]);
-    j = it / N;
+    j = it * RN;
     i = it - j * N;
-    k = j / N;
+    k = j * RN;
     j -= k * N;
     double wr = 0.0;
     double ws = 0.0;
@@ -48,9 +47,9 @@ void nekbone(double *w, const double *u, const double *g, const double *d) {
   __syncthreads();
 
   for(int it = threadIdx.x; it < e_size; it += blockDim.x) {
-    j = it / N;
+    j = it * RN;
     i = it - j * N;
-    k = j / N;
+    k = j * RN;
     j -= k * N;
     double s = 0.0;
     for(int n = 0; n < N; ++n) {
