@@ -9,7 +9,7 @@ void nekbone(double *w, double *u, double *g, double *d, const int N) {
   __shared__ double ul[1024];
   __shared__ double d_s[128];
 
-  for (int it = threadIdx.x ; it < e_size; it += blockDim.x) {
+  for (int it = threadIdx.x; it < e_size; it += blockDim.x) {
     ul[it] = u[e_offset + it];
   }
   
@@ -20,7 +20,7 @@ void nekbone(double *w, double *u, double *g, double *d, const int N) {
   __syncthreads();
 
   int i, j, k;
-  for(int it = threadIdx.x; it < e_size; it += blockDim.x) {
+  for (int it = threadIdx.x; it < e_size; it += blockDim.x) {
     j = it / N;
     i = it - j * N;
     k = j / N;
@@ -28,7 +28,7 @@ void nekbone(double *w, double *u, double *g, double *d, const int N) {
     double wr = 0.0;
     double ws = 0.0;
     double wt = 0.0;
-    for(int n = 0; n < N; ++n) {
+    for (int n = 0; n < N; ++n) {
       wr += d_s[n * N + i] * ul[N * (j + k * N) + n];
       ws += d_s[n * N + j] * ul[N * (n + k * N) + i];
       wt += d_s[n * N + k] * ul[N * (j + n * N) + i];
@@ -41,13 +41,13 @@ void nekbone(double *w, double *u, double *g, double *d, const int N) {
 
   __syncthreads();
 
-  for(int it = threadIdx.x; it < e_size; it += blockDim.x) {
+  for (int it = threadIdx.x; it < e_size; it += blockDim.x) {
     j = it / N;
     i = it - j * N;
     k = j / N;
     j -= k * N;
     double s = 0.0;
-    for(int n = 0; n < N; ++n) {
+    for (int n = 0; n < N; ++n) {
       s += d_s[i * N + n] * ur[N * (j + N * k) + n] +
         d_s[j * N + n] * us[N * (n + N * k) + i] +
         d_s[k * N + n] * ut[N * (j + N * n) + i];
