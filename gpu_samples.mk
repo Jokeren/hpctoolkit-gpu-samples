@@ -11,11 +11,11 @@ DEVICE_FLAGS += -dc
 LDFLAGS += -lcudart -lcuda -lstdc++ -lm
 
 ifneq ($(DEVICE),)
-DEVICE_OBJ := $(addprefix $(DEVICE), .o)
+DEVICE_OBJ := $(addsuffix .o, $(DEVICE))
 endif
 
 ifneq ($(CUBIN),)
-CUBIN_CUBIN := $(addprefix $(CUBIN), .cubin)
+CUBIN_CUBIN := $(addsuffix .cubin, $(CUBIN))
 endif
 
 ifeq ($(CPU_ARCH), power8)
