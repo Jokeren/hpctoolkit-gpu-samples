@@ -108,6 +108,7 @@ int main(int argc, char *argv[]) {
     DRIVER_API_CALL(cuMemFree(dp));
 
     DRIVER_API_CALL(cuStreamSynchronize(stream));
+    DRIVER_API_CALL(cuCtxSynchronize());
   }
 
   for (size_t i = 0; i < NUM_CONTEXTS; ++i) {
