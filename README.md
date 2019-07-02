@@ -19,6 +19,11 @@ Test cases to validate the correctness of hpctoolkit for GPU-accelerated applica
     make ARCH=<GPU arch>
     ./<application name> <device id (default 0)>
 
+## Runtime Behaviors
+|**Case**                         |**Purpose**                      |
+|---------------------------------|---------------------------------|
+|*cu_multi_contexts_multi_streams | Within each context, multiple CPU threads launch kernels to streams concurrently |
+
 ## Launch Patterns
 
 |**Case**                         |**Purpose**                      |
