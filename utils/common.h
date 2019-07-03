@@ -43,12 +43,15 @@
 static inline void cu_init_device(int device_num, CUdevice &device, CUcontext &context) {
   DRIVER_API_CALL(cuInit(0));
   DRIVER_API_CALL(cuDeviceGet(&device, device_num));
+  DRIVER_API_CALL(cuCtxCreate(&context, 0, device));
+  DRIVER_API_CALL(cuCtxSetCurrent(context));
+}
 
-  DRIVER_API_CALL(cuCtxGetCurrent(&context));
-  if (context == NULL) {
-    DRIVER_API_CALL(cuCtxCreate(&context, 0, device));
-    DRIVER_API_CALL(cuCtxSetCurrent(context));
-  }
+
+static inline void cu_load_module_function(CUmodule &module, const char *module_name,
+  CUfunction &function, const char *function_name) {
+  DRIVER_API_CALL(cuModuleLoad(&module, module_name));
+  DRIVER_API_CALL(cuModuleGetFunction(&function, module, function_name));
 }
 
 
