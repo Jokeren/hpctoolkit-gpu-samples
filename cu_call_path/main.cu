@@ -49,6 +49,14 @@ int main(int argc, char *argv[]) {
   cu_init_device(device_id, device, context);
   cu_load_module_function(module, "vecAdd.cubin", function, "vecAdd");
 
+  // Iter bias
+  if (argc > 2) {
+    iter1 = atoi(argv[2]);
+  }
+  if (argc > 3) {
+    iter2 = atoi(argv[3]);
+  }
+
   #pragma omp parallel
   {
     int l[N], r[N], p[N];
