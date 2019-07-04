@@ -38,11 +38,14 @@ int main(int argc, char *argv[]) {
   // Init device
   CUdevice device;
   CUcontext context;
+  CUmodule module;
+  CUfunction function;
   int device_id = 0;
   if (argc > 1) {
     device_id = atoi(argv[1]);
   }
   cu_init_device(device_id, device, context);
+  cu_load_module_function(module, "vecAdd.cubin", function, "vecAdd");
 
   #pragma omp parallel
   {
@@ -57,11 +60,6 @@ int main(int argc, char *argv[]) {
 
     DRIVER_API_CALL(cuCtxSetCurrent(context));
 
-    CUmodule moduleAdd;
-    CUfunction vecAdd;
-    DRIVER_API_CALL(cuModuleLoad(&moduleAdd, "vecAdd.cubin"));
-    DRIVER_API_CALL(cuModuleGetFunction(&vecAdd, moduleAdd, "vecAdd"));
-
     DRIVER_API_CALL(cuMemAlloc(&dl, N * sizeof(int)));
     DRIVER_API_CALL(cuMemAlloc(&dr, N * sizeof(int)));
     DRIVER_API_CALL(cuMemAlloc(&dp, N * sizeof(int)));
@@ -72,7 +70,7 @@ int main(int argc, char *argv[]) {
       &dl, &dr, &dp, &N
     };
 
-    GPU_TEST_FOR(DRIVER_API_CALL(cuLaunchKernel(vecAdd, blocks, 1, 1, threads, 1, 1, 0, 0, args, 0)));
+    GPU_TEST_FOR(DRIVER_API_CALL(cuLaunchKernel(function, blocks, 1, 1, threads, 1, 1, 0, 0, args, 0)));
 
     DRIVER_API_CALL(cuMemcpyDtoH(l, dl, N * sizeof(int))); 
     DRIVER_API_CALL(cuMemcpyDtoH(r, dr, N * sizeof(int))); 
@@ -81,18 +79,20 @@ int main(int argc, char *argv[]) {
     DRIVER_API_CALL(cuMemFree(dr));
     DRIVER_API_CALL(cuMemFree(dp));
 
-    DRIVER_API_CALL(cuModuleUnload(moduleAdd));
-
+#ifdef OUTPUT
     #pragma omp critical
     {
       printf("Thread %d\n", omp_get_thread_num());
       output(p, N);
     }
+#endif
+
+    DRIVER_API_CALL(cuCtxSynchronize());
   }
 
-  RUNTIME_API_CALL(cudaDeviceSynchronize());
-  DRIVER_API_CALL(cuCtxSynchronize());
+  DRIVER_API_CALL(cuModuleUnload(module));
   DRIVER_API_CALL(cuCtxDestroy(context));
+  RUNTIME_API_CALL(cudaDeviceSynchronize());
 
 #ifdef USE_MPI
   MPI_Finalize();
