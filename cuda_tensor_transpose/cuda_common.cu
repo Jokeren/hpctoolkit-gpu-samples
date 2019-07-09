@@ -4,7 +4,7 @@ const int dim_output = 3;
 const int dim_input = 3;
 double *device_output, *device_input;
 
-#ifdef CUDA4
+#if defined CUDA4 || defined CUDA5
 cudaMalloc(&device_output, data_size * sizeof(double));
 cudaMalloc(&device_input, data_size * sizeof(double));
 cudaMemcpy(device_input, input, data_size * sizeof(double), cudaMemcpyHostToDevice );
@@ -50,6 +50,9 @@ cudaEventRecord(event_start);
 #if defined CUDA4
 tensor_transpose<<<nblocks, NTHREADS>>>(dim_input, dim_output, nblocks, tile_size,
                                         device_input, device_output);
+#elif defined CUDA5
+tensor_transpose<dim_input, dim_output><<<nblocks, NTHREADS>>>(nblocks, tile_size,
+                                        device_input, device_output);
 #else
 tensor_transpose<<<nblocks, NTHREADS>>>(dim_input, dim_output, nblocks, tile_size,
                                         device_shape_input, device_shape_output,
@@ -65,7 +68,7 @@ elapsed_time /= 1000.0;
 
 cudaMemcpy(output, device_output, data_size * sizeof(double), cudaMemcpyDeviceToHost);
 
-#if defined CUDA4
+#if defined CUDA4 || defined CUDA5
 cudaFree(device_output);
 cudaFree(device_input);
 #else

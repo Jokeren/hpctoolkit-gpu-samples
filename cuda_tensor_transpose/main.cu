@@ -5,7 +5,7 @@
 static const int d1 = 41, d2 = 13, d3 = 11, d4 = 9, d5 = 76, d6 = 50;
 static const int data_size = d1 * d2 * d3 * d4 * d5 * d6;
 
-#if defined CUDA4
+#if defined CUDA4 || defined CUDA5
 __constant__ int d_shape_output[3];
 __constant__ int d_shape_input[3];
 __constant__ float d_shape_output_r[3];
@@ -42,6 +42,8 @@ void verify(double *input, double *output) {
 #include "cuda3.cu"
 #elif defined CUDA4
 #include "cuda4.cu"
+#elif defined CUDA5
+#include "cuda5.cu"
 #endif
 
 int main() {
@@ -61,6 +63,8 @@ int main() {
 #elif defined CUDA3
 #include "cuda_common.cu"
 #elif defined CUDA4
+#include "cuda_common.cu"
+#elif defined CUDA5
 #include "cuda_common.cu"
 #endif
 
