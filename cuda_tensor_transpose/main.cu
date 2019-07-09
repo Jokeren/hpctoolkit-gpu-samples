@@ -4,6 +4,17 @@
 // 1,2,3,4,5,6 -> 2,3,4,6,1,5
 static const int d1 = 41, d2 = 13, d3 = 11, d4 = 9, d5 = 76, d6 = 50;
 static const int data_size = d1 * d2 * d3 * d4 * d5 * d6;
+
+#if defined CUDA4
+__constant__ int d_shape_output[3];
+__constant__ int d_shape_input[3];
+__constant__ float d_shape_output_r[3];
+__constant__ float d_shape_input_r[3];
+__constant__ int d_stride_output_local[3];
+__constant__ int d_stride_output_global[3];
+__constant__ int d_stride_input[3];
+#endif
+
 static const int shape_output[] = {d2, d3, d1};
 static const int shape_input[] = {d4, d5, d6};
 static const float shape_output_r[] = {1.0 / d2, 1.0 / d3, 1.0 / d1};
@@ -29,6 +40,8 @@ void verify(double *input, double *output) {
 #include "cuda2.cu"
 #elif defined CUDA3
 #include "cuda3.cu"
+#elif defined CUDA4
+#include "cuda4.cu"
 #endif
 
 int main() {
@@ -46,6 +59,8 @@ int main() {
 #elif defined CUDA2
 #include "cuda_common.cu"
 #elif defined CUDA3
+#include "cuda_common.cu"
+#elif defined CUDA4
 #include "cuda_common.cu"
 #endif
 
