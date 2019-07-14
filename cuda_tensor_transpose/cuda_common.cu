@@ -47,6 +47,7 @@ cudaEventCreate(&event_start);
 cudaEventCreate(&event_end);
 
 cudaEventRecord(event_start);
+for (size_t i = 0; i < ITER; ++i) {
 #if defined CUDA4
 tensor_transpose<<<nblocks, NTHREADS>>>(dim_input, dim_output, nblocks, tile_size,
                                         device_input, device_output);
@@ -60,6 +61,7 @@ tensor_transpose<<<nblocks, NTHREADS>>>(dim_input, dim_output, nblocks, tile_siz
                                         device_stride_input, device_stride_output_local, device_stride_output_global,
                                         device_input, device_output);
 #endif
+}
 cudaEventRecord(event_end);
 cudaEventSynchronize(event_end);
 
