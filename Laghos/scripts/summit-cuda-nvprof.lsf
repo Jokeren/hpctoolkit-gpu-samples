@@ -12,4 +12,5 @@ date
 cp ./Laghos/cuda/laghos $MEMBERWORK/csc322
 cp ./Laghos/data/square01_quad.mesh $MEMBERWORK/csc322
 cd $MEMBERWORK/csc322
-time jsrun --smpiargs='-x PAMI_DISABLE_CUDA_HOOK=1 -disable_gpu_hooks' -n 1 -a 1 -g 1 hpcrun -o hpcrun-laghos-measurement -e nvidia-cuda ./laghos -p 0 -m ./square01_quad.mesh -rs 3 -tf 0.75 -pa
+time jsrun --smpiargs='-x PAMI_DISABLE_CUDA_HOOK=1 -disable_gpu_hooks' -n 1 -a 1 -g 1 nvprof --device-buffer-size 64 ./laghos -p 0 -m ./square01_quad.mesh -rs 3 -tf 0.75 -pa
+
