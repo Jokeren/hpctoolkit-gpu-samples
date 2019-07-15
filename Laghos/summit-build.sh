@@ -3,8 +3,8 @@ export MPI_HOME=`echo $MPI_HOME`
 export CUDA_HOME=`echo $CUDA_HOME`
 
 # hypre
-wget https://computation.llnl.gov/projects/hypre-scalable-linear-solvers-multigrid-methods/download/hypre-2.11.2.tar.gz
-tar xzvf hypre-2.11.2.tar.gz
+wget https://github.com/LLNL/hypre/archive/v2.11.2.tar.gz
+tar -xvf v2.11.2.tar.gz
 cd hypre-2.11.2/src
 ./configure --disable-fortran --with-MPI --with-MPI-include=$MPI_HOME/include --with-MPI-lib-dirs=$MPI_HOME/lib
 make -j8

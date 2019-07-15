@@ -4,6 +4,7 @@
 // 1,2,3,4,5,6 -> 2,3,4,6,1,5
 static const int d1 = 41, d2 = 13, d3 = 11, d4 = 9, d5 = 76, d6 = 50;
 static const int data_size = d1 * d2 * d3 * d4 * d5 * d6;
+static int ITER = 1;
 
 #if defined CUDA4 || defined CUDA5
 __constant__ int d_shape_output[3];
@@ -46,7 +47,11 @@ void verify(double *input, double *output) {
 #include "cuda5.cu"
 #endif
 
-int main() {
+int main(int argv, char **argc) {
+  if (argv > 1) {
+    ITER = atoi(argc[1]);
+  }
+
   double *input = new double[data_size]();
   double *output = new double[data_size]();
 
