@@ -12,4 +12,4 @@ date
 cp ./Laghos/raja/laghos $MEMBERWORK/csc322
 cp ./Laghos/data/square01_quad.mesh $MEMBERWORK/csc322
 cd $MEMBERWORK/csc322
-jsrun -n 1 -a 1 -g 1 hpcrun -e nvidia-cuda-pc-sampling -o hpctoolkit-laghos-raja-measurement  ./laghos -p 0 -m ./square01_quad.mesh -rs 1 -tf 0.10 -pa -cuda
+jsrun -n 1 -a 1 -g 1 hpcrun -e nvidia-cuda-pc-sampling -o hpctoolkit-laghos-raja-measurement  ./laghos -p 0 -m ./square01_quad.mesh -rs 1 -tf 0.30 -pa -cuda
