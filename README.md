@@ -15,9 +15,17 @@ Test cases to validate the correctness of hpctoolkit for GPU-accelerated applica
 
 **Run**
 
+***CUDA Programs***
+
     cd <sample path>
     make ARCH=<GPU arch>
     ./<application name> <device id (default 0)>
+
+***OpenMP Programs***
+
+    cd <sample path>
+    make SHOWFLAGS="-L<OpenMP path> -lomp"
+    LD_LIBRARY_PATH=<OpenMP path>:$LD_LIBRARY_PATH ./<application name> <device id (default 0)>
 
 ## Runtime Behaviors
 |**Case**                         |**Purpose**                      |
