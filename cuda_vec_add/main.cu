@@ -77,11 +77,13 @@ int main(int argc, char *argv[]) {
     RUNTIME_API_CALL(cudaFree(dr));
     RUNTIME_API_CALL(cudaFree(dp));
 
+#ifdef OUTPUT
     #pragma omp critical
     {
       printf("Thread %d\n", omp_get_thread_num());
       output(p, N);
     }
+#endif
   }
 
   cudaDeviceSynchronize();
