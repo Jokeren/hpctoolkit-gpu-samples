@@ -13,3 +13,6 @@
 [submodule "Laghos/Laghos"]
 	path = Laghos/Laghos
 	url = git@github.com:Jokeren/Laghos.git
+[submodule "miniqmc/miniqmc"]
+	path = miniqmc/miniqmc
+	url = git@github.com:Jokeren/miniqmc.git
