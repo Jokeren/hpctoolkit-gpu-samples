@@ -6,7 +6,6 @@
 #include <limits>
 #include <random>
 #include <omp.h>
-#include <cuda_runtime.h>
 
 static const size_t N = 1000;
 static const size_t ITER = 100;

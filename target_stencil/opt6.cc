@@ -10,7 +10,7 @@
       for (size_t w = 1; w < W - 1; w++) {
         A_new[h * W + w] = 0.25 * (A[h * W + w + 1] + A[h * W + w - 1] +
           A[(h + 1) * W + w] + A[(h - 1) * W + w]);
-        error = fmax(error, fabs(A_new[h * W + w] - A[h * W + w]));
+        error = std::max(error, std::abs(A_new[h * W + w] - A[h * W + w]));
       } 
     }
 
