@@ -2,6 +2,6 @@
 
 N=$1
 make clean
-make SHOWFLAGS="-DOPT"$N
+make SHOWFLAGS="-DOPT"$N" -g"
 echo "OPT"$N
-hpcrun -e nvidia-ompt-pc-sampling -e REALTIME ./main
+hpcrun -e nvidia-cuda-pc-sampling -e CPUTIME ./main

@@ -7,7 +7,7 @@
 #include <random>
 #include <omp.h>
 
-static const size_t N = 1000;
+static const size_t N = 4096;
 static const size_t ITER = 100;
 static const float T = 0.2;
 
@@ -65,8 +65,6 @@ int main(int argc, char *argv[]) {
 #include "opt4.cc"
 #elif defined OPT5
 #include "opt5.cc"
-#elif defined OPT6
-#include "opt6.cc"
 #endif
 
   gettimeofday(&t2, NULL);

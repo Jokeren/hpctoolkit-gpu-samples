@@ -3,7 +3,7 @@ while (error > T && iter < ITER) {
 
   #pragma omp target data map(A[:H * W], A_new[:H * W])
   {
-    #pragma omp target teams map(error)
+    #pragma omp target teams map(error) num_teams(128)
     #pragma omp distribute parallel for reduction(max:error) collapse(2)
     for (size_t h = 1; h < H - 1; h++) {
       for (size_t w = 1; w < W - 1; w++) {
@@ -16,7 +16,7 @@ while (error > T && iter < ITER) {
 
   #pragma omp target data map(A[:H * W], A_new[:H * W])
   {
-    #pragma omp target teams
+    #pragma omp target teams num_teams(128)
     #pragma omp distribute parallel for collapse(2)
     for (size_t h = 1; h < H - 1; h++) {
       for (size_t w = 1; w < W - 1; w++) {
