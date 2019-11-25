@@ -42,12 +42,12 @@ $(EXEC): % : %.cu $(DEVICE_OBJ)
 cubin: $(CUBIN_CUBIN)
 
 $(CUBIN_CUBIN): %.cubin : %.cu
-	$(CXX) $(GPU_FLAGS) $(CUBIN_FLAGS) $<
+	$(CXX) $(SHOWFLAGS) $(GPU_FLAGS) $(CUBIN_FLAGS) $<
 
 device: $(DEVICE_OBJ)
 
 $(DEVICE_OBJ): %.o : %.cu
-	$(CXX) $(GPU_FLAGS) $(DEVICE_FLAGS) $<
+	$(CXX) $(SHOWFLAGS) $(GPU_FLAGS) $(DEVICE_FLAGS) $<
 
 clean:
 	rm -rf $(EXEC) *.o *.dot *.hpcstruct *.cubin

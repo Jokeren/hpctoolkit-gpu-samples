@@ -9,7 +9,7 @@
 #include "../utils/common.h"
 
 // XXX: Please set num threads greater than 8
-static size_t N = 1000;
+static size_t N = 500000;
 static size_t NUM_CONTEXTS = 2;
 static size_t NUM_STREAMS_PER_CONTEXT = 4;
 
@@ -78,7 +78,9 @@ int main(int argc, char *argv[]) {
 
     DRIVER_API_CALL(cuCtxSetCurrent(context));
 
-    int l[N], r[N], p[N];
+    int *l = new int[N]();
+    int *r = new int[N]();
+    int *p = new int[N]();
     CUdeviceptr dl, dr, dp;
 
     init(l, N);
