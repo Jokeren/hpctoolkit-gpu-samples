@@ -19,3 +19,6 @@
 [submodule "lammps/lammps"]
 	path = lammps/lammps
 	url = git@github.com:Jokeren/lammps.git
+[submodule "nvdisasm_test/CUDA-CFG-10.1"]
+	path = nvdisasm_test/CUDA-CFG-10.1
+	url = git@github.com:Jokeren/CUDA-CFG-10.1.git
