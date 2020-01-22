@@ -93,8 +93,9 @@ int main(int argc, char *argv[]) {
     DRIVER_API_CALL(cuMemAlloc(&dl, N * sizeof(int)));
     DRIVER_API_CALL(cuMemAlloc(&dr, N * sizeof(int)));
     DRIVER_API_CALL(cuMemAlloc(&dp, N * sizeof(int)));
-    DRIVER_API_CALL(cuMemcpyHtoD(dl, l, N * sizeof(int))); 
-    DRIVER_API_CALL(cuMemcpyHtoD(dr, r, N * sizeof(int))); 
+
+    DRIVER_API_CALL(cuMemcpyHtoDAsync(dl, l, N * sizeof(int), stream)); 
+    DRIVER_API_CALL(cuMemcpyHtoDAsync(dr, r, N * sizeof(int), stream)); 
 
     void *args[4] = {
       &dl, &dr, &dp, &N
@@ -102,14 +103,16 @@ int main(int argc, char *argv[]) {
 
     GPU_TEST_FOR(DRIVER_API_CALL(cuLaunchKernel(function, blocks, 1, 1, threads, 1, 1, 0, stream, args, 0)));
 
-    DRIVER_API_CALL(cuMemcpyDtoH(l, dl, N * sizeof(int))); 
-    DRIVER_API_CALL(cuMemcpyDtoH(r, dr, N * sizeof(int))); 
-    DRIVER_API_CALL(cuMemcpyDtoH(p, dp, N * sizeof(int))); 
+    DRIVER_API_CALL(cuMemcpyDtoHAsync(l, dl, N * sizeof(int), stream)); 
+    DRIVER_API_CALL(cuMemcpyDtoHAsync(r, dr, N * sizeof(int), stream)); 
+    DRIVER_API_CALL(cuMemcpyDtoHAsync(p, dp, N * sizeof(int), stream)); 
+
+    DRIVER_API_CALL(cuStreamSynchronize(stream));
+
     DRIVER_API_CALL(cuMemFree(dl));
     DRIVER_API_CALL(cuMemFree(dr));
     DRIVER_API_CALL(cuMemFree(dp));
 
-    DRIVER_API_CALL(cuStreamSynchronize(stream));
     DRIVER_API_CALL(cuCtxSynchronize());
   }
 
