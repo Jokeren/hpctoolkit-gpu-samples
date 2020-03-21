@@ -22,3 +22,6 @@
 [submodule "nvdisasm_test/CUDA-CFG-10.1"]
 	path = nvdisasm_test/CUDA-CFG-10.1
 	url = git@github.com:Jokeren/CUDA-CFG-10.1.git
+[submodule "quicksilver"]
+	path = quicksilver
+	url = git@github.com:LLNL/Quicksilver.git
