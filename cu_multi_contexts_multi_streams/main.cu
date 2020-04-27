@@ -2,6 +2,7 @@
 #include <omp.h>
 #include <cuda.h>
 #include <cuda_runtime.h>
+#include <pthread.h>
 #ifdef USE_MPI
 #include <mpi.h>
 #endif
@@ -9,9 +10,7 @@
 #include "../utils/common.h"
 
 // XXX: Please set num threads greater than 8
-static size_t N = 500000;
-static size_t NUM_CONTEXTS = 2;
-static size_t NUM_STREAMS_PER_CONTEXT = 4;
+static size_t N = 10000;
 
 
 void init(int *p, size_t size) {
@@ -37,6 +36,17 @@ int main(int argc, char *argv[]) {
   printf("MPI task %d/%d\n", rank, numtasks);
 #endif
 
+  size_t NUM_CONTEXTS = 1;
+  char *buf = NULL;
+  if ((buf = getenv("NUM_CONTEXTS")) != NULL) {
+    NUM_CONTEXTS = atoi(buf);
+  }
+
+  size_t NUM_STREAMS_PER_CONTEXT = 1;
+  if ((buf = getenv("NUM_STREAMS_PER_CONTEXT")) != NULL) {
+    NUM_STREAMS_PER_CONTEXT = atoi(buf);
+  }
+
   // Init device
   CUdevice device;
   int device_id = 0;
@@ -48,19 +58,22 @@ int main(int argc, char *argv[]) {
 
   CUcontext contexts[NUM_CONTEXTS];
   CUfunction functions[NUM_CONTEXTS];
+  CUmodule moduleAdd[NUM_CONTEXTS];
   CUstream streams[NUM_STREAMS_PER_CONTEXT * NUM_CONTEXTS];
 
   for (size_t i = 0; i < NUM_CONTEXTS; ++i) {
     DRIVER_API_CALL(cuCtxCreate(&contexts[i], 0, device));
     DRIVER_API_CALL(cuCtxSetCurrent(contexts[i]));
+    printf("context: %p\n", contexts[i]);
 
     for (size_t j = 0; j < NUM_STREAMS_PER_CONTEXT; ++j) {
       DRIVER_API_CALL(cuStreamCreate(&streams[i * NUM_STREAMS_PER_CONTEXT + j], CU_STREAM_NON_BLOCKING));
     }
 
-    CUmodule moduleAdd;
-    DRIVER_API_CALL(cuModuleLoad(&moduleAdd, "vecAdd.cubin"));
-    DRIVER_API_CALL(cuModuleGetFunction(&functions[i], moduleAdd, "vecAdd"));
+    DRIVER_API_CALL(cuModuleLoad(&moduleAdd[i], "vecAdd.cubin"));
+    DRIVER_API_CALL(cuModuleGetFunction(&functions[i], moduleAdd[i], "vecAdd"));
+
+    DRIVER_API_CALL(cuCtxSetCurrent(NULL));
   }
 
   #pragma omp parallel
@@ -114,10 +127,25 @@ int main(int argc, char *argv[]) {
     DRIVER_API_CALL(cuMemFree(dp));
 
     DRIVER_API_CALL(cuCtxSynchronize());
+
+    delete [] l;
+    delete [] r;
+    delete [] p;
+
+    DRIVER_API_CALL(cuCtxSetCurrent(NULL));
   }
 
   for (size_t i = 0; i < NUM_CONTEXTS; ++i) {
-    DRIVER_API_CALL(cuCtxDestroy(contexts[i]));
+    DRIVER_API_CALL(cuCtxSetCurrent(contexts[i]));
+
+    for (size_t j = 0; j < NUM_STREAMS_PER_CONTEXT; ++j) {
+      DRIVER_API_CALL(cuStreamDestroy(streams[i * NUM_STREAMS_PER_CONTEXT + j]));
+    }
+
+    DRIVER_API_CALL(cuModuleUnload(moduleAdd[i]));
+    // TODO(Keren): investigation
+    //DRIVER_API_CALL(cuCtxDestroy(contexts[i]));
+    DRIVER_API_CALL(cuCtxSetCurrent(NULL));
   }
 
 #ifdef USE_MPI
