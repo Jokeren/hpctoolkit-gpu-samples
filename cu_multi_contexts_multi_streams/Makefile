@@ -3,7 +3,7 @@ TEMPLATE := ../gpu_samples.mk
 
 EXEC := main
 
-CUBIN := vecAdd
+CUBIN := vecAdd vecMult vecConv
 
 include $(CONFIGS)
 include $(TEMPLATE)
