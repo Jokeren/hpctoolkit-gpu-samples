@@ -1,62 +1,76 @@
 #!/bin/bash
 
-export HPCTOOLKIT_GPU_TEST_REP=10000
-valgrind="/home/dx4/hpctools/spack/opt/spack/linux-rhel7-power9le/gcc-7.3.0/valgrind-3.15.0-kkdcxjgtl3gcc5l6lzdvbznj46dthaku/bin/valgrind"
-subscribe="/home/dx4/cupti_test/cupti-preload/subscriber/subscribe"
-enablesampling="/home/dx4/cupti_test/cupti-preload/pc_sampling/enablesampling"
-hpcrun="../../hpctools/hpctoolkit/hpctoolkit-install/bin/hpcrun"
+usage()
+{
+    cat <<EOF
+Usage:
+    ./bench.sh [options] ./main
+    options:
+    -h help
+    -c <num of contexts>
+      default 1
+    -d <cuda device>
+      default 0 
+    -n <number of elements>
+      default 100000
+    -r <recursive depth>
+      default 0 
+    -s <num of streams>
+      default 1
+    -t <num of threads>
+      default 1
+    -p <profiler command>
+      default ""
+    -dd <debug>
+EOF
+    exit 0
+}
 
+while test "x$1" != x
+do
+  arg="$1" ; shift
+  case "$arg" in
+    -c)
+      export BENCH_NUM_CONTEXTS=$1
+      shift
+      ;;
+    -d)
+      export BENCH_DEVICE_ID=$1
+      shift
+      ;;
+    -n)
+      export BENCH_NUM_ELEMENTS=$1
+      shift
+      ;;
+    -r)
+      export BENCH_DEPTH=$1
+      shift
+      ;;
+    -s)
+      export BENCH_NUM_STREAMS_PER_CONTEXT=$1
+      shift
+      ;;
+    -t)
+      export BENCH_NUM_THREADS=$1
+      shift
+      ;;
+    -p)
+      export BENCH_PROFILER=$1
+      shift
+      ;;
+    -dd)
+      export BENCH_DEBUG=1
+      ;;
+    -h)
+      usage
+      exit
+      ;;
+    * )
+      set -- "$arg" "$@"
+      break
+      ;;
+  esac
+done
 
-if_else=${1:-0}
-
-if [ $if_else -eq 0 ]; then
-	for spt in 1 2 4 16 32 64 128; do
-
-		for ((ctx = 1; ctx <= 3; ctx++)); do
-
-			for ((stm = 20; stm <= 80; stm += 20)); do
-
-				export STREAMS_PER_THREAD=$spt
-				export NUM_CONTEXTS=$ctx
-				export NUM_STREAMS_PER_CONTEXT=$stm
-				export OMP_NUM_THREADS=$(expr "$ctx" '*' "$stm")
-
-				echo "-------------------------------------------------------"
-				echo "STREAMS_PER_THREAD = "$STREAMS_PER_THREAD
-				echo "-------------------------------------------------------"
-				echo "HPCTOOLKIT_GPU_TEST_REP = "$HPCTOOLKIT_GPU_TEST_REP
-				echo "NUM_CONTEXTS = "$NUM_CONTEXTS" ----------------------------------"
-				echo "NUM_STREAMS_PER_CONTEXT = "$NUM_STREAMS_PER_CONTEXT
-				echo "OMP_NUM_THREADS = "$OMP_NUM_THREADS
-
-#				time enablesampling ./main
-#				time subscribe ./main
-				time hpcrun -e gpu=nvidia -t ./main -md
-#				time ./main
-
-			done
-		done
-	done
-
-else
-
-	export HPCTOOLKIT_GPU_TEST_REP=10000
-	export STREAMS_PER_THREAD=16
-	export NUM_CONTEXTS=3
-	export NUM_STREAMS_PER_CONTEXT=60
-	export OMP_NUM_THREADS=$(expr "$NUM_CONTEXTS" '*' "$NUM_STREAMS_PER_CONTEXT")
-
-	echo "-------------------------------------------------------"
-	echo "spt = "$STREAMS_PER_THREAD
-	echo "-------------------------------------------------------"
-	echo "HPCTOOLKIT_GPU_TEST_REP = "$HPCTOOLKIT_GPU_TEST_REP
-	echo "NUM_CONTEXTS = "$NUM_CONTEXTS" ----------------------------------"
-	echo "NUM_STREAMS_PER_CONTEXT = "$NUM_STREAMS_PER_CONTEXT
-	echo "OMP_NUM_THREADS = "$OMP_NUM_THREADS
-
-#	time enablesampling ./main
-#	time subscribe ./main
-#	time hpcrun -e gpu=nvidia -t ./main -md
-	time ./main
-
-fi
+echo $BENCH_PROFILER
+time $BENCH_PROFILER ./main
