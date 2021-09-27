@@ -19,6 +19,8 @@ Usage:
       default 1
     -t <num of threads>
       default 1
+    -i <num of iterations>
+      default 1
     -p <profiler command>
       default ""
     -dd <debug>
@@ -56,6 +58,10 @@ do
       ;;
     -p)
       export BENCH_PROFILER=$1
+      shift
+      ;;
+    -i)
+      export HPCTOOLKIT_GPU_TEST_REP=$1
       shift
       ;;
     -dd)
