@@ -96,6 +96,7 @@ int main(int argc, char *argv[]) {
 
     // Test case 2
     // C2 should get half the samples of C1
+    // The equal range mode should fail in this case
     #pragma loop nounroll
     for (size_t i = 0; i < 128; ++i) {
       // C1
@@ -107,6 +108,7 @@ int main(int argc, char *argv[]) {
 
     // Test case 3
     // C2's add should be half of C1's add
+    // The equal range mode should fail in this case
     #pragma loop nounroll
     for (size_t i = 0; i < 128; ++i) {
       // C1
