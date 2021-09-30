@@ -9,7 +9,7 @@
 #include "../utils/common.h"
 
 
-static const size_t N = 1000;
+static const size_t N = 10000;
 
 
 void init(int *p, size_t size) {
