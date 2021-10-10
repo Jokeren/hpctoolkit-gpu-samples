@@ -62,8 +62,23 @@ void test2(int blocks, int threads, int *l, int *r, int *p) {
 
 void test3(int blocks, int threads, int *l, int *r, int *p) {
   // Input: root->abccdabccd
-  // Output: root->KK
+  // Output: root->EE
   //         K->abccd
+  //        
+  //    7. root->AccdA
+  //       A->ab
+  //
+  //    8. root->BcdB
+  //       B->abc
+  //
+  //    9. root->BcdBc
+  //       C->abcc
+  //
+  //    10. root->DdD
+  //       D->abcc
+  //
+  //    11. root->EE
+  //       E->abccd
   #pragma nounroll
   for (size_t j = 0; j < 2; ++j) {
     vecAdd_a<<<blocks, threads>>>(l, r, p, N);
@@ -81,14 +96,26 @@ void test4(int blocks, int threads, int *l, int *r, int *p) {
   // Output: root->CAC
   //         C->aAd
   //         A->bc
+  //
+  //      5. root->abcdb
+  //      6. root->aAdA
+  //         A->bc
+  //         
+  //      7. root->aAdAa
+  //      8. root->aAdAab 
+  //      9. root->BdAB
+  //         B->aA
+  //         A->bc
+  //      
+  //     10. root->CAC
+  //         C->aAd
+  //         A->bc
   #pragma nounroll
   for (size_t i = 0; i < 3; ++i) {
     if (i == 0 || i == 2) {
       vecAdd_a<<<blocks, threads>>>(l, r, p, N);
     }
-    if (i == 0 || i == 1) {
-      vecAdd_b<<<blocks, threads>>>(l, r, p, N);
-    }
+    vecAdd_b<<<blocks, threads>>>(l, r, p, N);
     vecAdd_c<<<blocks, threads>>>(l, r, p, N);
     if (i == 0 || i == 2) {
       vecAdd_d<<<blocks, threads>>>(l, r, p, N);
@@ -98,10 +125,27 @@ void test4(int blocks, int threads, int *l, int *r, int *p) {
 
 void test5(int blocks, int threads, int *l, int *r, int *p) {
   // Input: root->abcdbcabcddbcd
-  // Output: root->CACdE
-  //         C->aE
+  // Output: root->CACdAd
   //         A->bc
-  //         E->Ad
+  //         C->aAd
+  //
+  //        6. root->aAdA
+  //           A->bc
+  //        7. root->aAdAa
+  //        8. root->aAdAab
+  //        9. root->BdAB
+  //           A->bc
+  //           B->aA
+  //
+  //       10. root->CAC
+  //           A->bc
+  //           C->aAd
+  //
+  //        11.root->CACd
+  //        12.root->CACdb
+  //        13.root->CACdbc
+  //        13.root->CACdA
+  //        14.root->CACdAd
   #pragma nounroll
   for (size_t i = 0; i < 5; ++i) {
     if (i == 0 || i == 2) {
@@ -120,33 +164,16 @@ void test5(int blocks, int threads, int *l, int *r, int *p) {
 }
 
 void test6(int blocks, int threads, int *l, int *r, int *p) {
-  // Input: root->bcabceabcdeab
-  // Output: A->bc
-  //         B->aA
-  #pragma nounroll
-  for (size_t i = 0; i < 5; ++i) {
-    if (i == 0 || i == 1 || i == 2 || i == 4) {
-      vecAdd_b<<<blocks, threads>>>(l, r, p, N);
-    }
-    if (i == 0 || i == 1 || i == 2) {
-      vecAdd_c<<<blocks, threads>>>(l, r, p, N);
-    }
-    if (i == 1 || i == 3) {
-      vecAdd_e<<<blocks, threads>>>(l, r, p, N);
-    }
-    if (i == 0 || i == 1 || i == 3) {
-      vecAdd_a<<<blocks, threads>>>(l, r, p, N);
-    }
-    if (i == 2) {
-      vecAdd_d<<<blocks, threads>>>(l, r, p, N);
-    }
-  }
-}
-
-void test7(int blocks, int threads, int *l, int *r, int *p) {
-  // Input: root->abcdbcab | (a1)b | (a2)d
-  // Output: root->aAdA | (a1)b | (a2)d
+  // Input: root->abcdbcab | (a1)b(a2)d
+  // Output: root->aAdAab | (a1)b(a2)d
   //         A->bc
+  //
+  //       6. root->aAdA
+  //          A->bc
+  //
+  //       7. root->aAdAa
+  //       8. root->aAdAab
+  //       9. root->aAdAab |
   #pragma nounroll
   for (size_t i = 0; i < 5; ++i) {
     if (i == 0 || i == 2) {
@@ -170,7 +197,7 @@ void test7(int blocks, int threads, int *l, int *r, int *p) {
   }
 }
 
-void test8(int blocks, int threads, int *l, int *r, int *p) {
+void test7(int blocks, int threads, int *l, int *r, int *p) {
   // Input: root->abcdbcab | (a1)ab
   // Output: root->aAdAB | (a1)B
   //         A->bc
@@ -191,6 +218,27 @@ void test8(int blocks, int threads, int *l, int *r, int *p) {
     }
     if (i == 0) {
       vecAdd_d<<<blocks, threads>>>(l, r, p, N);
+    }
+  }
+}
+
+void test8(int blocks, int threads, int *l, int *r, int *p) {
+  // Input: root->abc | (a1) | abc
+  // Output: root->B | (a1) | B
+  //         B->abc
+  #pragma nounroll
+  for (size_t i = 0; i < 3; ++i) {
+    if (i == 0 || i == 2) {
+      vecAdd_a<<<blocks, threads>>>(l, r, p, N);
+    }
+    if (i == 1) {
+      vecAdd_a<<<blocks, threads>>>(l, r, p, N);
+    }
+    if (i == 0 || i == 2) {
+      vecAdd_b<<<blocks, threads>>>(l, r, p, N);
+    }
+    if (i == 0 || i == 2) {
+      vecAdd_c<<<blocks, threads>>>(l, r, p, N);
     }
   }
 }

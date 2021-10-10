@@ -2,7 +2,11 @@ CXX ?= nvcc
 
 CPU_FLAGS += -g -fopenmp
 
-GPU_FLAGS += -O3 -lineinfo -arch $(ARCH) 
+ifeq ($(NO_OPT), 1)
+	GPU_FLAGS += -lineinfo
+else
+	GPU_FLAGS += -O3 -lineinfo -arch $(ARCH) 
+endif
 
 CUBIN_FLAGS += -cubin
 
