@@ -223,15 +223,34 @@ void test7(int blocks, int threads, int *l, int *r, int *p) {
 }
 
 void test8(int blocks, int threads, int *l, int *r, int *p) {
-  // Input: root->abc | (a1) | abc
-  // Output: root->B | (a1) | B
-  //         B->abc
+  // Input: root-> abc | (a1) | abc
+  // Output: root-> | B | (a1) | B
   #pragma nounroll
   for (size_t i = 0; i < 3; ++i) {
     if (i == 0 || i == 2) {
       vecAdd_a<<<blocks, threads>>>(l, r, p, N);
     }
     if (i == 1) {
+      vecAdd_a<<<blocks, threads>>>(l, r, p, N);
+    }
+    if (i == 0 || i == 2) {
+      vecAdd_b<<<blocks, threads>>>(l, r, p, N);
+    }
+    if (i == 0 || i == 2) {
+      vecAdd_c<<<blocks, threads>>>(l, r, p, N);
+    }
+  }
+}
+
+void test9(int blocks, int threads, int *l, int *r, int *p) {
+  // Input: root-> abc | (a1) | abc | (a1)
+  // Output: root-> | B | (a1) | (a1)
+  #pragma nounroll
+  for (size_t i = 0; i < 4; ++i) {
+    if (i == 0 || i == 2) {
+      vecAdd_a<<<blocks, threads>>>(l, r, p, N);
+    }
+    if (i == 1 || i == 3) {
       vecAdd_a<<<blocks, threads>>>(l, r, p, N);
     }
     if (i == 0 || i == 2) {
@@ -298,6 +317,8 @@ int main(int argc, char *argv[]) {
       test7(blocks, threads, dl, dr, dp);
     } else if (test_id == 8) {
       test8(blocks, threads, dl, dr, dp);
+    } else if (test_id == 9) {
+      test9(blocks, threads, dl, dr, dp);
     }
 
     RUNTIME_API_CALL(cudaMemcpy(p, dp, N * sizeof(int), cudaMemcpyDeviceToHost));
