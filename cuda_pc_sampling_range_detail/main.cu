@@ -165,7 +165,7 @@ void test5(int blocks, int threads, int *l, int *r, int *p) {
 
 void test6(int blocks, int threads, int *l, int *r, int *p) {
   // Input: root->abcdbcab | (a1)b(a2)d
-  // Output: root->aAdAab | (a1)b(a2)d
+  // Output: root->aAdAab | (a1)b | (a2)d
   //         A->bc
   //
   //       6. root->aAdA
@@ -198,8 +198,8 @@ void test6(int blocks, int threads, int *l, int *r, int *p) {
 }
 
 void test7(int blocks, int threads, int *l, int *r, int *p) {
-  // Input: root->abcdbcab | (a1)ab
-  // Output: root->aAdAB | (a1)B
+  // Input: root->abcdbcab | (a1) | ab
+  // Output: root->aAdAB | (a1) | B
   //         A->bc
   //         B->ab
   #pragma nounroll
