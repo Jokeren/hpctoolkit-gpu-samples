@@ -319,6 +319,10 @@ int main(int argc, char *argv[]) {
       test8(blocks, threads, dl, dr, dp);
     } else if (test_id == 9) {
       test9(blocks, threads, dl, dr, dp);
+    } else if (test_id == 10) {
+      for (size_t i = 0; i < 100; ++i) {
+        test9(blocks, threads, dl, dr, dp);
+      }
     }
 
     RUNTIME_API_CALL(cudaMemcpy(p, dp, N * sizeof(int), cudaMemcpyDeviceToHost));
