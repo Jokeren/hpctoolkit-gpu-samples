@@ -49,6 +49,42 @@ void vecAdd2(int *l, int *r, int *p, size_t N) {
 }
 
 
+void test1(int *dl, int *dr, int *dp, int threads, int blocks) {
+  #pragma loop nounroll
+  for (size_t i = 0; i < 128; ++i) {
+    // C1
+    GPU_TEST_FOR((vecAdd1<<<blocks, threads>>>(dl, dr, dp, N)));
+
+    // C2
+    GPU_TEST_FOR((vecAdd1<<<blocks, threads>>>(dl, dr, dp, N)));
+  }
+}
+
+
+void test2(int *dl, int *dr, int *dp, int threads, int blocks) {
+  #pragma loop nounroll
+  for (size_t i = 0; i < 128; ++i) {
+    // C1
+    GPU_TEST_FOR((vecAdd1<<<blocks, threads>>>(dl, dr, dp, N)));
+
+    // C2
+    GPU_TEST_FOR((vecAdd1<<<blocks, threads>>>(dl, dr, dp, N / 2)));
+  }
+}
+
+
+void test3(int *dl, int *dr, int *dp, int threads, int blocks) {
+  #pragma loop nounroll
+  for (size_t i = 0; i < 128; ++i) {
+    // C1
+    GPU_TEST_FOR((vecAdd2<<<blocks, threads>>>(dl, dr, dp, N)));
+
+    // C2
+    GPU_TEST_FOR((vecAdd2<<<blocks, threads>>>(dl, dr, dp, N / 2)));
+  }
+}
+
+
 int main(int argc, char *argv[]) {
 #ifdef USE_MPI
   int numtasks, rank;
@@ -64,6 +100,11 @@ int main(int argc, char *argv[]) {
     device_id = atoi(argv[1]);
   }
   cuda_init_device(device_id);
+
+  int mode = 1;
+  if (argc > 2) {
+    mode = atoi(argv[2]);
+  }
 
   #pragma omp parallel
   {
@@ -83,39 +124,20 @@ int main(int argc, char *argv[]) {
     size_t threads = 256;
     size_t blocks = (N - 1) / threads + 1;
 
-    // Test case 1
-    // C2 should the same number samples as C1
-    #pragma loop nounroll
-    for (size_t i = 0; i < 128; ++i) {
-      // C1
-      GPU_TEST_FOR((vecAdd1<<<blocks, threads>>>(dl, dr, dp, N)));
-
-      // C2
-      GPU_TEST_FOR((vecAdd1<<<blocks, threads>>>(dl, dr, dp, N)));
-    }
-
-    // Test case 2
-    // C2 should get half the samples of C1
-    // The equal range mode should fail in this case
-    #pragma loop nounroll
-    for (size_t i = 0; i < 128; ++i) {
-      // C1
-      GPU_TEST_FOR((vecAdd1<<<blocks, threads>>>(dl, dr, dp, N)));
-
-      // C2
-      GPU_TEST_FOR((vecAdd1<<<blocks, threads>>>(dl, dr, dp, N / 2)));
-    }
-
-    // Test case 3
-    // C2's add should be half of C1's add
-    // The equal range mode should fail in this case
-    #pragma loop nounroll
-    for (size_t i = 0; i < 128; ++i) {
-      // C1
-      GPU_TEST_FOR((vecAdd2<<<blocks, threads>>>(dl, dr, dp, N)));
-
-      // C2
-      GPU_TEST_FOR((vecAdd2<<<blocks, threads>>>(dl, dr, dp, N / 2)));
+    if (mode == 1) {
+      // Test case 1
+      // C2 should the same number samples as C1
+      test1(dl, dr, dp, threads, blocks);
+    } else if (mode == 2) {
+      // Test case 2
+      // C2 should get half the samples of C1
+      // The equal range mode should fail in this case
+      test2(dl, dr, dp, threads, blocks);
+    } else if (mode == 3) {
+      // Test case 3
+      // C2's add should be half of C1's add
+      // The equal range mode should fail in this case
+      test3(dl, dr, dp, threads, blocks);
     }
 
     RUNTIME_API_CALL(cudaMemcpy(p, dp, N * sizeof(int), cudaMemcpyDeviceToHost));
