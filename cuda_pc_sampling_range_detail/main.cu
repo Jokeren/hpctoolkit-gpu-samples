@@ -262,6 +262,28 @@ void test9(int blocks, int threads, int *l, int *r, int *p) {
   }
 }
 
+void test10(int blocks, int threads, int *l, int *r, int *p) {
+  // Input: root-> abbbb | (a1) | abbbb | (a2) | abbbb 
+  //               01234 |  5   | 6789(10) | (11) | 
+  // Output: Origin: root-> | R | (a1) | R | (b1) | Db
+  //         rollback: root-> | aAA | (a1) | B | (a2) | B
+  #pragma nounroll
+  for (size_t i = 0; i < 17; ++i) {
+    if (i == 0 || i == 6 || i == 12) {
+      vecAdd_a<<<blocks, threads>>>(l, r, p, N);
+    }
+    if (i == 5) {
+      vecAdd_a<<<blocks, threads>>>(l, r, p, N);
+    }
+    if (i == 11) {
+      vecAdd_a<<<blocks, threads>>>(l, r, p, N);
+    }
+    if ((i > 0 && i < 5) || (i > 6 && i < 11) || (i > 12 && i < 17)) {
+      vecAdd_b<<<blocks, threads>>>(l, r, p, N);
+    }
+  }
+}
+
 int main(int argc, char *argv[]) {
 #ifdef USE_MPI
   int numtasks, rank;
@@ -320,7 +342,9 @@ int main(int argc, char *argv[]) {
     } else if (test_id == 9) {
       test9(blocks, threads, dl, dr, dp);
     } else if (test_id == 10) {
-      for (size_t i = 0; i < 100; ++i) {
+      test10(blocks, threads, dl, dr, dp);
+    } else if (test_id == 11) {
+      for (size_t i = 0; i < 1000; ++i) {
         test9(blocks, threads, dl, dr, dp);
       }
     }
