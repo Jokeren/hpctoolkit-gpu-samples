@@ -39,7 +39,6 @@ int __attribute__ ((noinline)) add(int l, int r) {
   return l + r;
 }
 
-
 __global__
 void vecAdd2(int *l, int *r, int *p, size_t N) {
   size_t idx = blockDim.x * blockIdx.x + threadIdx.x;
@@ -48,10 +47,34 @@ void vecAdd2(int *l, int *r, int *p, size_t N) {
   }
 }
 
+__global__
+void vecAdd3(int *l, int *r, int *p, size_t N) {
+  size_t idx = blockDim.x * blockIdx.x + threadIdx.x;
+  if (idx < N) {
+    p[idx] = l[idx] - r[idx];
+  }
+}
+
+__global__
+void vecAdd4(int *l, int *r, int *p, size_t N) {
+  size_t idx = blockDim.x * blockIdx.x + threadIdx.x;
+  if (idx < N) {
+    p[idx] = l[idx] * r[idx];
+  }
+}
+
+__global__
+void vecAdd5(int *l, int *r, int *p, size_t N) {
+  size_t idx = blockDim.x * blockIdx.x + threadIdx.x;
+  if (idx < N) {
+    p[idx] = l[idx] / r[idx];
+  }
+}
+
 
 void test1(int *dl, int *dr, int *dp, int threads, int blocks) {
   #pragma loop nounroll
-  for (size_t i = 0; i < 128; ++i) {
+  for (size_t i = 0; i < 1 << 12; ++i) {
     // C1
     GPU_TEST_FOR((vecAdd1<<<blocks, threads>>>(dl, dr, dp, N)));
 
@@ -63,7 +86,7 @@ void test1(int *dl, int *dr, int *dp, int threads, int blocks) {
 
 void test2(int *dl, int *dr, int *dp, int threads, int blocks) {
   #pragma loop nounroll
-  for (size_t i = 0; i < 128; ++i) {
+  for (size_t i = 0; i < 1 << 12; ++i) {
     // C1
     GPU_TEST_FOR((vecAdd1<<<blocks, threads>>>(dl, dr, dp, N)));
 
@@ -75,12 +98,36 @@ void test2(int *dl, int *dr, int *dp, int threads, int blocks) {
 
 void test3(int *dl, int *dr, int *dp, int threads, int blocks) {
   #pragma loop nounroll
-  for (size_t i = 0; i < 128; ++i) {
+  for (size_t i = 0; i < 1 << 12; ++i) {
     // C1
     GPU_TEST_FOR((vecAdd2<<<blocks, threads>>>(dl, dr, dp, N)));
 
     // C2
     GPU_TEST_FOR((vecAdd2<<<blocks, threads>>>(dl, dr, dp, N / 2)));
+  }
+}
+
+void test4(int *dl, int *dr, int *dp, int threads, int blocks) {
+  #pragma loop nounroll
+  for (size_t i = 0; i < 1 << 12; ++i) {
+    // C1
+    GPU_TEST_FOR((vecAdd1<<<blocks, threads>>>(dl, dr, dp, N)));
+
+    // C2
+    GPU_TEST_FOR((vecAdd2<<<blocks, threads>>>(dl, dr, dp, N / 2)));
+
+    if (i % 3 == 0) {
+      // C3
+      GPU_TEST_FOR((vecAdd3<<<blocks, threads>>>(dl, dr, dp, N / 4)));
+    } else if (i % 3 == 1) {
+      // C4
+      GPU_TEST_FOR((vecAdd4<<<blocks, threads>>>(dl, dr, dp, N / 8)));
+    } else {
+      // C5
+      GPU_TEST_FOR((vecAdd5<<<blocks, threads>>>(dl, dr, dp, N / 8)));
+    }
+
+    GPU_TEST_FOR((vecAdd1<<<blocks, threads>>>(dl, dr, dp, N)));
   }
 }
 
@@ -138,7 +185,11 @@ int main(int argc, char *argv[]) {
       // C2's add should be half of C1's add
       // The equal range mode should fail in this case
       test3(dl, dr, dp, threads, blocks);
-    }
+    } else if (mode == 4) {
+      // Test case 4
+      // Test range ids
+      test4(dl, dr, dp, threads, blocks);
+    } 
 
     RUNTIME_API_CALL(cudaMemcpy(p, dp, N * sizeof(int), cudaMemcpyDeviceToHost));
 
