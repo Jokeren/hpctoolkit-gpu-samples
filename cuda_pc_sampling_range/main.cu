@@ -132,6 +132,38 @@ void test4(int *dl, int *dr, int *dp, int threads, int blocks) {
 }
 
 
+void test5(int *dl, int *dr, int *dp, int threads, int blocks) {
+  for (size_t i = 0; i < 1 << 10; ++i) {
+    // C1
+    GPU_TEST_FOR((vecAdd1<<<blocks, threads>>>(dl, dr, dp, N)));
+
+    // C2
+    GPU_TEST_FOR((vecAdd2<<<blocks, threads>>>(dl, dr, dp, N / 2)));
+
+    // C3
+    GPU_TEST_FOR((vecAdd3<<<blocks, threads>>>(dl, dr, dp, N / 4)));
+  }
+}
+
+
+void test6(int *dl, int *dr, int *dp, int threads, int blocks) {
+  for (size_t j = 0; j < 3; ++j) {
+    for (size_t i = 0; i < 1 << 10; ++i) {
+      // C1
+      GPU_TEST_FOR((vecAdd1<<<blocks, threads>>>(dl, dr, dp, N)));
+
+      // C2
+      GPU_TEST_FOR((vecAdd2<<<blocks, threads>>>(dl, dr, dp, N / 2)));
+
+      // C3
+      GPU_TEST_FOR((vecAdd3<<<blocks, threads>>>(dl, dr, dp, N / 4)));
+    }
+
+    GPU_TEST_FOR((vecAdd1<<<blocks, threads>>>(dl, dr, dp, N)));
+  }
+}
+
+
 int main(int argc, char *argv[]) {
 #ifdef USE_MPI
   int numtasks, rank;
@@ -189,7 +221,15 @@ int main(int argc, char *argv[]) {
       // Test case 4
       // Test range ids
       test4(dl, dr, dp, threads, blocks);
-    } 
+    } else if (mode == 5) {
+      // Test case 5
+      // Test compress rate
+      test5(dl, dr, dp, threads, blocks);
+    } else if (mode == 6) {
+      // Test case 5
+      // Test split function
+      test6(dl, dr, dp, threads, blocks);
+    }
 
     RUNTIME_API_CALL(cudaMemcpy(p, dp, N * sizeof(int), cudaMemcpyDeviceToHost));
 
