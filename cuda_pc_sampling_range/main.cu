@@ -147,7 +147,8 @@ void test5(int *dl, int *dr, int *dp, int threads, int blocks) {
 
 
 void test6(int *dl, int *dr, int *dp, int threads, int blocks) {
-  for (size_t j = 0; j < 3; ++j) {
+  #pragma loop nounroll
+  for (size_t j = 0; j < 2; ++j) {
     for (size_t i = 0; i < 1 << 10; ++i) {
       // C1
       GPU_TEST_FOR((vecAdd1<<<blocks, threads>>>(dl, dr, dp, N)));
@@ -156,7 +157,11 @@ void test6(int *dl, int *dr, int *dp, int threads, int blocks) {
       GPU_TEST_FOR((vecAdd2<<<blocks, threads>>>(dl, dr, dp, N / 2)));
 
       // C3
-      GPU_TEST_FOR((vecAdd3<<<blocks, threads>>>(dl, dr, dp, N / 4)));
+      if (j == 2 && i > (1 << 5)) {
+        GPU_TEST_FOR((vecAdd4<<<blocks, threads>>>(dl, dr, dp, N / 4)));
+      } else {
+        GPU_TEST_FOR((vecAdd3<<<blocks, threads>>>(dl, dr, dp, N / 4)));
+      }
     }
 
     GPU_TEST_FOR((vecAdd1<<<blocks, threads>>>(dl, dr, dp, N)));
